@@ -48,16 +48,16 @@ class EventManager {
 		$eventName = $event->name();
 		$event->data(array_merge($event->data(), $data));
 		if (!isset(static::$registry[$eventName])) {
-			Log::write('no event', Log::LEVEL_DEBUG);
+			Log::write('No event registered.', Log::LEVEL_DEBUG, compact('eventName'));
 			return false;
 		}
-		Log::write('trigger event', Log::LEVEL_DEBUG);
+		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
 		foreach (static::$registry[$eventName] as $listener) {
 			if (call_user_func_array($listener, array($event)) === false) {
 				$event->stopPropagation();
 			}
 			if (!$event->isPropagating()) {
-				Log::write('propagation stopped', Log::LEVEL_DEBUG);
+				Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
 				break;
 			}
 		}
@@ -71,6 +71,7 @@ class EventManager {
 	 * @return void
 	 */
 	public static function clear($event) {
+		Log::write('Clearing individual event.', Log::LEVEL_DEBUG, compact('event'));
 		if (isset(static::$registry[$event])) {
 			unset(static::$registry[$event]);
 		}
@@ -82,6 +83,7 @@ class EventManager {
 	 * @return void
 	 */
 	public static function clearAll() {
+		Log::write('Clearing all events.', Log::LEVEL_DEBUG);
 		static::$registry = array();
 	}
 

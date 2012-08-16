@@ -11,6 +11,9 @@
 		 strict="true"
 		 colors="true">
 	<testsuites>
+		<testsuite name="Core Test Suite">
+			<directory suffix="Test.php">./Zumba/Symbiosis/Test</directory>
+		</testsuite>
 		<testsuite name="Event Test Suite">
 			<directory suffix="Test.php">./Zumba/Symbiosis/Test/Event</directory>
 		</testsuite>
@@ -21,6 +24,7 @@
 	<filter>
 		<blacklist>
 			<file>./Zumba/AutoLoader.php</file>
+			<directory>./Zumba/Test</directory>
 		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
 			<directory>./Zumba</directory>

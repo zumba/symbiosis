@@ -7,10 +7,10 @@ use \Zumba\Symbiosis\Exception\NotCallableException;
 class Log {
 
 	const LEVEL_OFF = 0;
-	const LEVEL_DEBUG = 1;
-	const LEVEL_INFO = 2;
-	const LEVEL_WARNING = 3;
-	const LEVEL_ERROR = 4;
+	const LEVEL_DEBUG = 2;
+	const LEVEL_INFO = 4;
+	const LEVEL_WARNING = 8;
+	const LEVEL_ERROR = 16;
 
 	/**
 	 * Receiver method of the log messages
@@ -57,9 +57,10 @@ class Log {
 	 *
 	 * @param string $message Log message
 	 * @param integer $level Log level. See LEVEL_* constants
+	 * @param array $details Further details to provide to the logger
 	 * @return void
 	 */
-	public static function write($message, $level) {
+	public static function write($message, $level, $details = array()) {
 		$receiver = static::$receiver;
 		if (!$receiver) {
 			return;
@@ -69,7 +70,7 @@ class Log {
 			return;
 		}
 
-		call_user_func($receiver, $message, $level);
+		call_user_func($receiver, $message, $level, $details);
 	}
 
 }

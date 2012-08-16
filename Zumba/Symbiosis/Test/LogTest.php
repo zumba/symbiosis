@@ -59,4 +59,18 @@ class LogTest extends TestCase {
 		Log::write('Any message', Log::LEVEL_DEBUG);
 	}
 
+	public function testLogDetails() {
+		$fake = $this->getMock('stdClass', array('log'));
+		Log::receive(array($fake, 'log'));
+		Log::minLevel(Log::LEVEL_DEBUG);
+
+		$expectedDetails = array(
+			'ping' => 'pong'
+		);
+		$fake->expects($this->at(0))
+			->method('log')
+			->with($this->equalTo('Message 1'), $this->equalTo(Log::LEVEL_INFO), $this->equalTo($expectedDetails));
+		Log::write('Message 1', Log::LEVEL_INFO, $expectedDetails);
+	}
+
 }
