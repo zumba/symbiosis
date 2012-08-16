@@ -1,0 +1,20 @@
+{
+    "name": "zumba/symbiosis",
+    "type": "library",
+    "description": "Symbiosis, event structure for bootstrapping plugins.",
+    "keywords": ["plugins", "events", "plugin", "event"],
+    "homepage": "http://engineering.zumba.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Saylor",
+            "email": "christopher.saylor@zumba.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.x"
+    },
+    "autoload": {
+        "files": ["main.php"]
+    }
+}
