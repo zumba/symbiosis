@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit backupGlobals="false"
 		 backupStaticAttributes="false"
-		 bootstrap="./main.php"
+		 bootstrap="./autoload.php"
 		 convertErrorsToExceptions="true"
 		 convertNoticesToExceptions="true"
 		 convertWarningsToExceptions="true"
@@ -23,7 +23,7 @@
 			<file>./Symbiosis/AutoLoader.php</file>
 		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
-			<directory>../Symbiosis</directory>
+			<directory>./Symbiosis</directory>
 		</whitelist>
 	</filter>
 </phpunit>
