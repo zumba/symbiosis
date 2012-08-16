@@ -3,6 +3,7 @@
 namespace Symbiosis\Event;
 
 use \Symbiosis\Event\Event,
+	\Symbiosis\Log,
 	\Symbiosis\Exception;
 
 class EventManager {
@@ -47,16 +48,16 @@ class EventManager {
 		$eventName = $event->name();
 		$event->data(array_merge($event->data(), $data));
 		if (!isset(static::$registry[$eventName])) {
-			// Log no event (debug)
+			Log::write('no event', Log::LEVEL_DEBUG);
 			return false;
 		}
-		// Log trigger event (debug)
+		Log::write('trigger event', Log::LEVEL_DEBUG);
 		foreach (static::$registry[$eventName] as $listener) {
 			if (call_user_func_array($listener, array($event)) === false) {
 				$event->stopPropagation();
 			}
 			if (!$event->isPropagating()) {
-				// Log propagation stopped (debug)
+				Log::write('propagation stopped', Log::LEVEL_DEBUG);
 				break;
 			}
 		}

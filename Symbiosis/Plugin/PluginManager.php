@@ -3,6 +3,7 @@
 namespace Symbiosis\Plugin;
 
 use \Symbiosis\Framework\Plugin,
+	\Symbiosis\Log,
 	\Symbiosis\Exception;
 
 class PluginManager {
@@ -51,7 +52,7 @@ class PluginManager {
 	 */
 	public static function initializePlugin(Plugin $plugin) {
 		$className = \get_class($plugin);
-		// Log plugin initialization (debug)
+		Log::write('plugin initialization', Log::LEVEL_DEBUG);
 		if (!method_exists($plugin, 'registerEvents')) {
 			throw Exception\NoRegisterEventsMethodException('Unable to call registerEvents method.');
 		}
