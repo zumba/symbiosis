@@ -9,6 +9,10 @@
         {
             "name": "Chris Saylor",
             "email": "christopher.saylor@zumba.com"
+        },
+        {
+            "name": "Juan Basso",
+            "email": "juan.basso@zumba.com"
         }
     ],
     "require": {
