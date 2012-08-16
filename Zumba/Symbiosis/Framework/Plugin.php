@@ -1,6 +1,6 @@
 <?php
 
-namespace Symbiosis\Framework;
+namespace Zumba\Symbiosis\Framework;
 
 abstract class Plugin {
 
@@ -11,6 +11,11 @@ abstract class Plugin {
 	public function __construct() {
 	}
 
+	/**
+	 * Main method called when plugin is initialized to register events to listen.
+	 *
+	 * @return void
+	 */
 	abstract public function registerEvents();
 
 }

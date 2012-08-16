@@ -1,11 +1,4 @@
 <?php
 
-if (!defined('SYMBIOSIS_ROOT')) {
-	define('SYMBIOSIS_ROOT', __DIR__);
-}
-if (!defined('SYMBIOSIS_CORE')) {
-	define('SYMBIOSIS_CORE', SYMBIOSIS_ROOT . '/Symbiosis/');
-}
-
-require SYMBIOSIS_CORE . '/AutoLoader.php';
-\Symbiosis\AutoLoader::register('Symbiosis', SYMBIOSIS_ROOT);
+require __DIR__ . '/Zumba/AutoLoader.php';
+\Zumba\AutoLoader::register('Zumba\Symbiosis', __DIR__);

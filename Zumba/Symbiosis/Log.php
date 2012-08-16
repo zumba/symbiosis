@@ -1,8 +1,8 @@
 <?php
 
-namespace Symbiosis;
+namespace Zumba\Symbiosis;
 
-use \Symbiosis\Exception\NotCallableException;
+use \Zumba\Symbiosis\Exception\NotCallableException;
 
 class Log {
 

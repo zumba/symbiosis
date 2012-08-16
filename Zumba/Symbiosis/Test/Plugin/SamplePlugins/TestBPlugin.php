@@ -1,8 +1,8 @@
 <?php
 
-namespace Symbiosis\Test\Plugin\SamplePlugins;
+namespace Zumba\Symbiosis\Test\Plugin\SamplePlugins;
 
-use Symbiosis\Framework\Plugin;
+use \Zumba\Symbiosis\Framework\Plugin;
 
 class TestBPlugin extends Plugin {
 

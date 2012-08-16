@@ -1,8 +1,8 @@
 <?php
 
-namespace Symbiosis\Event;
+namespace Zumba\Symbiosis\Event;
 
-use \Symbiosis\Event\EventManager;
+use \Zumba\Symbiosis\Event\EventManager;
 
 class Event {
 

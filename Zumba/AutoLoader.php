@@ -1,6 +1,6 @@
 <?php
 
-namespace Symbiosis;
+namespace Zumba;
 
 class AutoLoader {
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Symbiosis\Test\Event;
+namespace Zumba\Symbiosis\Test\Event;
 
-use \Symbiosis\Test\TestCase,
-	\Symbiosis\Event\EventManager,
-	\Symbiosis\Event\Event;
+use \Zumba\Symbiosis\Test\TestCase,
+	\Zumba\Symbiosis\Event\EventManager,
+	\Zumba\Symbiosis\Event\Event;
 
 /**
  * @group event
@@ -20,10 +20,10 @@ class EventManagerTest extends TestCase {
 		$testObject = $this->getMock('stdClass', array('testCallback1', 'testCallback2'));
 		$testObject->expects($this->once())
 			->method('testCallback1')
-			->with($this->isInstanceOf('Symbiosis\Event\Event'));
+			->with($this->isInstanceOf('Zumba\Symbiosis\Event\Event'));
 		$testObject->expects($this->exactly(2))
 			->method('testCallback2')
-			->with($this->isInstanceOf('Symbiosis\Event\Event'));
+			->with($this->isInstanceOf('Zumba\Symbiosis\Event\Event'));
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
 		EventManager::register('test.event1', array($testObject, 'testCallback2'));
 		EventManager::register('test.event2', array($testObject, 'testCallback2'));

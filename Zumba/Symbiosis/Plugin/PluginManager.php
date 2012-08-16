@@ -1,10 +1,10 @@
 <?php
 
-namespace Symbiosis\Plugin;
+namespace Zumba\Symbiosis\Plugin;
 
-use \Symbiosis\Framework\Plugin,
-	\Symbiosis\Log,
-	\Symbiosis\Exception;
+use \Zumba\Symbiosis\Framework\Plugin,
+	\Zumba\Symbiosis\Log,
+	\Zumba\Symbiosis\Exception;
 
 class PluginManager {
 

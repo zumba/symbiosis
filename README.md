@@ -28,8 +28,8 @@ $ phpunit
 
 namespace \YourApp\Plugin;
 
-use \Symbiosis\Framework\Plugin,
-    \Symbiosis\Event\EventManager;
+use \Zumba\Symbiosis\Framework\Plugin,
+    \Zumba\Symbiosis\Event\EventManager;
 
 class SamplePlugin extends Plugin {
 
@@ -42,19 +42,26 @@ class SamplePlugin extends Plugin {
 }
 ```
 
-### Your application
+### Your application bootstrap
 
 ```php
 <?php
 
-use \Symbiosis\Plugin\PluginManager,
-    \Symbiosis\Event\Event;
+use \Zumba\Symbiosis\Plugin\PluginManager;
 
 // Somewhere in your application bootstrap, load your plugins
 PluginManager::loadPlugins(
 	'/path/to/your/plugin/directory', // Path to where you stored your plugins
 	'YourApp\Plugin'                  // namespace defined in your plugins (see example above)
 );
+```
+
+### Your application
+
+```php
+<?php
+
+use \Zumba\Symbiosis\Event\Event;
 
 // Somewhere in your app, trigger plugins listening to event
 $event = new Event('sample.someevent', array('ping' => 'pong'));

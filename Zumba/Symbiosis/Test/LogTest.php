@@ -1,8 +1,8 @@
 <?php
 
-namespace Symbiosis\Test;
+namespace Zumba\Symbiosis\Test;
 
-use \Symbiosis\Log;
+use \Zumba\Symbiosis\Log;
 
 class LogTest extends TestCase {
 
@@ -17,7 +17,7 @@ class LogTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException Symbiosis\Exception\NotCallableException
+	 * @expectedException Zumba\Symbiosis\Exception\NotCallableException
 	 */
 	public function testWrongReceiver() {
 		Log::receive('something wrong');

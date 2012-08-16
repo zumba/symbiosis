@@ -12,18 +12,18 @@
 		 colors="true">
 	<testsuites>
 		<testsuite name="Event Test Suite">
-			<directory suffix="Test.php">./Symbiosis/Test/Event</directory>
+			<directory suffix="Test.php">./Zumba/Symbiosis/Test/Event</directory>
 		</testsuite>
 		<testsuite name="Plugin Test Suite">
-			<directory suffix="Test.php">./Symbiosis/Test/Plugin</directory>
+			<directory suffix="Test.php">./Zumba/Symbiosis/Test/Plugin</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
 		<blacklist>
-			<file>./Symbiosis/AutoLoader.php</file>
+			<file>./Zumba/AutoLoader.php</file>
 		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
-			<directory>./Symbiosis</directory>
+			<directory>./Zumba</directory>
 		</whitelist>
 	</filter>
 </phpunit>

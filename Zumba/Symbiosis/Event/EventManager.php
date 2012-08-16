@@ -1,10 +1,10 @@
 <?php
 
-namespace Symbiosis\Event;
+namespace Zumba\Symbiosis\Event;
 
-use \Symbiosis\Event\Event,
-	\Symbiosis\Log,
-	\Symbiosis\Exception;
+use \Zumba\Symbiosis\Event\Event,
+	\Zumba\Symbiosis\Log,
+	\Zumba\Symbiosis\Exception;
 
 class EventManager {
 
@@ -23,7 +23,7 @@ class EventManager {
 	 * @param string|array $events
 	 * @param callable $callback
 	 * @return void
-	 * @throws \Symbiosis\Exception\NotCollableException
+	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
 	 */
 	public static function register($events, $callback) {
 		if (!is_callable($callback)) {
@@ -40,7 +40,7 @@ class EventManager {
 	 *
 	 * Returns true if a registered event's callback was called.
 	 *
-	 * @param \Symbiosis\Event\Event $event Event object
+	 * @param \Zumba\Symbiosis\Event\Event $event Event object
 	 * @param array $data Data to append/override in the event object
 	 * @return boolean
 	 */

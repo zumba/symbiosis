@@ -1,6 +1,6 @@
 <?php
 
-namespace Symbiosis\Exception;
+namespace Zumba\Symbiosis\Exception;
 
 class NotCallableException extends \Exception {
 
