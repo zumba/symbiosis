@@ -75,7 +75,10 @@ class PluginManager {
 				}
 				$class = $namespace . '\\' . \basename($entry, '.php');
 				if (class_exists($class)) {
-					$classObjects[] = new $class();
+					$plugin = new $class();
+					if ($plugin->enabled) {
+						$classObjects[] = $plugin;
+					}
 				}
 			}
 			// Order the plugin objects by priority

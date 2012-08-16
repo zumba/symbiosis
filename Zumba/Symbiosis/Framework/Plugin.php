@@ -6,8 +6,23 @@ abstract class Plugin {
 
 	const PRIORITY_DEFAULT = 100;
 
-	public $priority = 100;
+	/**
+	 * Determines the order in which the plugins are executed for a specific event.
+	 *
+	 * @var integer
+	 */
+	public $priority = self::PRIORITY_DEFAULT;
 
+	/**
+	 * Determines if this plugin should be included as activated.
+	 *
+	 * @var boolean
+	 */
+	public $enabled = true;
+
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 	}
 
