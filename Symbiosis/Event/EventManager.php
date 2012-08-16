@@ -22,6 +22,7 @@ class EventManager {
 	 * @param string|array $events
 	 * @param callable $callback
 	 * @return void
+	 * @throws \Symbiosis\Exception\NotCollableException
 	 */
 	public static function register($events, $callback) {
 		if (!is_callable($callback)) {
