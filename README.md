@@ -26,6 +26,8 @@ $ phpunit
 ```php
 <?php
 
+namespace \YourApp\Plugin;
+
 use \Symbiosis\Framework\Plugin,
     \Symbiosis\Event\EventManager;
 
@@ -45,9 +47,16 @@ class SamplePlugin extends Plugin {
 ```php
 <?php
 
-use \Symbiosis\Event\Event;
+use \Symbiosis\Plugin\PluginManager,
+    \Symbiosis\Event\Event;
 
-// Somewhere in your app
+// Somewhere in your application bootstrap, load your plugins
+PluginManager::loadPlugins(
+	'/path/to/your/plugin/directory', // Path to where you stored your plugins
+	'YourApp\Plugin'                  // namespace defined in your plugins (see example above)
+);
+
+// Somewhere in your app, trigger plugins listening to event
 $event = new Event('sample.someevent', array('ping' => 'pong'));
 $event->trigger();
 ```
