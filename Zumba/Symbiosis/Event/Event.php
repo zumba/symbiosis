@@ -28,6 +28,13 @@ class Event {
 	protected $isPropagating = true;
 
 	/**
+	 * Suggestion to application and other plugins if further action should be halted.
+	 *
+	 * @var boolean
+	 */
+	protected $shouldPreventAction = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $name
@@ -80,6 +87,25 @@ class Event {
 	 */
 	public function stopPropagation() {
 		$this->isPropagating = false;
+	}
+
+	/**
+	 * Determines if it is suggested to prevent further actions.
+	 *
+	 * @return boolean
+	 */
+	public function shouldPreventAction() {
+		return $this->shouldPreventAction;
+	}
+
+	/**
+	 * Sets the suggestion of preventing further action.  Default true.
+	 *
+	 * @param boolean $prevent
+	 * @return void
+	 */
+	public function preventAction($prevent = true) {
+		$this->shouldPreventAction = (boolean)$prevent;
 	}
 
 	/**

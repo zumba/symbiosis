@@ -1,6 +1,7 @@
 Symbiosis is a drop-in event driven plugin architecture.
 
-The goal is to allow anyone to create an event to drop in their application and a plugin interface called by that event.
+The goal is to allow anyone to create a plugin structure for their existing code base using an event oriented system.
+The secondary benefit of using Symbiosis is that the event structure can be used apart from the plugin structure.
 
 ## Requirements
 
