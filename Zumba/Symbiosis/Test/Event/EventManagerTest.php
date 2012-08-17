@@ -34,9 +34,27 @@ class EventManagerTest extends TestCase {
 		$this->assertTrue($event2->trigger());
 	}
 
+	/**
+	 * @expectedException Zumba\Symbiosis\Exception\NotCallableException
+	 */
+	public function testInvalidRegistration() {
+		$obj = new \stdClass();
+		EventManager::register('uncallable', array($obj, 'uncallable'));
+	}
+
 	public function testTriggerWithNoListener() {
 		$event = new Event('test.event1');
 		$this->assertFalse($event->trigger());
+	}
+
+	public function testClearEvent() {
+		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject->expects($this->never())
+			->method('testCallback1');
+		EventManager::register('test.event1', array($testObject, 'testCallback1'));
+		EventManager::clear('test.event1');
+		$event = new Event('test.event1');
+		$event->trigger();
 	}
 
 	public function testStopPropagationVarient1() {
@@ -61,6 +79,26 @@ class EventManagerTest extends TestCase {
 		});
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
 		$this->assertTrue($event->trigger());
+	}
+
+	public function testEventName() {
+		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject->expects($this->once())
+			->method('testCallback1');
+		EventManager::register('test.event1', array($testObject, 'testCallback1'));
+		$event = new Event('test.event1');
+		$event->trigger();
+		$event->name('test.event2');
+		$event->trigger();
+	}
+
+	public function testSuggestingPreventAction() {
+		$event = new Event('test.event1');
+		EventManager::register('test.event1', function(Event $event) {
+			$event->preventAction();
+		});
+		$event->trigger();
+		$this->assertTrue($event->shouldPreventAction());
 	}
 
 }

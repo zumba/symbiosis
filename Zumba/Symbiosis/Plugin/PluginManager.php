@@ -48,7 +48,7 @@ class PluginManager {
 	 *
 	 * @param \Symbiosis\Framework\Plugin $plugin Plugin instance.
 	 * @return mixed
-	 * @throws NoRegisterEventsMethodException
+	 * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
 	 */
 	public static function initializePlugin(Plugin $plugin) {
 		$className = \get_class($plugin);
