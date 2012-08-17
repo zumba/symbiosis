@@ -29,6 +29,10 @@
 		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
 			<directory>./Zumba</directory>
+			<exclude>
+				<file>./Zumba/AutoLoader.php</file>
+				<directory>./Zumba/Symbiosis/Test</directory>
+			</exclude>
 		</whitelist>
 	</filter>
 </phpunit>
