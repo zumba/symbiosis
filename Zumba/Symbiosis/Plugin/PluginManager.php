@@ -53,10 +53,6 @@ class PluginManager {
 	public static function initializePlugin(Plugin $plugin) {
 		$className = \get_class($plugin);
 		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, compact('className'));
-		if (!method_exists($plugin, 'registerEvents')) {
-			Log::write('Plugin registerEvents is uncallable.', Log::LEVEL_ERROR, compact('className'));
-			throw Exception\NoRegisterEventsMethodException('Unable to call registerEvents method.');
-		}
 
 		return $plugin->registerEvents();
 	}
