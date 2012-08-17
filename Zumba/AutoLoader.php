@@ -7,7 +7,7 @@ class AutoLoader {
 	/**
 	 * Self Instance
 	 *
-	 * @var \Symbiosis\AutoLoader
+	 * @var \Zumba\AutoLoader
 	 */
 	protected static $self;
 
@@ -28,7 +28,7 @@ class AutoLoader {
 	/**
 	 * Get Instance
 	 *
-	 * @return \Symbiosis\AutoLoader
+	 * @return \Zumba\AutoLoader
 	 */
 	protected static function getInstance() {
 		if (!static::$self) {

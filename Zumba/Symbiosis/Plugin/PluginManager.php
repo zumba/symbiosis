@@ -46,7 +46,7 @@ class PluginManager {
 	/**
 	 * Initialize a specific plugin by classname (note: full classname including namespace).
 	 *
-	 * @param \Symbiosis\Framework\Plugin $plugin Plugin instance.
+	 * @param \Zumba\Symbiosis\Framework\Plugin $plugin Plugin instance.
 	 * @return mixed
 	 * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
 	 */
@@ -92,8 +92,8 @@ class PluginManager {
 	/**
 	 * Compares the priority of two cart plugins.
 	 *
-	 * @param \Symbiosis\Framework\Plugin $a
-	 * @param \Symbiosis\Framework\Plugin $b
+	 * @param \Zumba\Symbiosis\Framework\Plugin $a
+	 * @param \Zumba\Symbiosis\Framework\Plugin $b
 	 * @return integer
 	 */
 	public static function comparePriority(Plugin $a, Plugin $b) {

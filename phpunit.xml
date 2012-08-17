@@ -23,8 +23,9 @@
 	</testsuites>
 	<filter>
 		<blacklist>
-			<file>./Zumba/Symbiosis/AutoLoader.php</file>
-			<directory>./Zumba/Test</directory>
+			<file>./autoload.php</file>
+			<file>./Zumba/AutoLoader.php</file>
+			<directory>./Zumba/Symbiosis/Test</directory>
 		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
 			<directory>./Zumba</directory>
