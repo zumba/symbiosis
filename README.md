@@ -5,6 +5,8 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 
 __Current Version__: v1.1.2
 
+[![Build Status](https://secure.travis-ci.org/zumba/symbiosis.png)](http://travis-ci.org/zumba/symbiosis)
+
 ## Requirements
 
 PHP 5.3+
