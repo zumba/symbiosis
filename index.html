@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Symbiosis by zumba</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Symbiosis</h1>
+        <p>Event system for drop in support of plugin architecture.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/zumba/symbiosis" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/zumba/symbiosis/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/zumba/symbiosis/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p>Symbiosis is a drop-in event driven plugin architecture.</p>
+
+<p>The goal is to allow anyone to create a plugin structure for their existing code base using an event oriented system.
+The secondary benefit of using Symbiosis is that the event structure can be used apart from the plugin structure.</p>
+
+<p><strong>Current Version</strong>: v1.1.2</p>
+
+<p><a href="http://travis-ci.org/zumba/symbiosis"><img src="https://secure.travis-ci.org/zumba/symbiosis.png" alt="Build Status"></a></p>
+
+<h2>Requirements</h2>
+
+<p>PHP 5.3+</p>
+
+<h2>Setup</h2>
+
+<ol>
+<li>In your main application, you need to include the Symbiosis autoloader: <code>include_once 'symbiosis/autoload.php';</code>.</li>
+<li>That's it!</li>
+</ol><h2>Testing</h2>
+
+<p>After cloning the repo, simply <code>cd</code> to the cloned directly and run:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>phpunit
+</pre></div>
+
+<h2>Example Plugin</h2>
+
+<h3>Plugin</h3>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="nx">\YourApp\Plugin</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">\Zumba\Symbiosis\Framework\Plugin</span><span class="p">,</span>
+    <span class="nx">\Zumba\Symbiosis\Event\EventManager</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">SamplePlugin</span> <span class="k">extends</span> <span class="nx">Plugin</span> <span class="p">{</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">registerEvents</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">EventManager</span><span class="o">::</span><span class="na">register</span><span class="p">(</span><span class="s1">'sample.someevent'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">print_r</span><span class="p">(</span><span class="nv">$event</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">());</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+
+<h3>Your application bootstrap</h3>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">\Zumba\Symbiosis\Plugin\PluginManager</span><span class="p">;</span>
+
+<span class="c1">// Somewhere in your application bootstrap, load your plugins</span>
+<span class="nx">PluginManager</span><span class="o">::</span><span class="na">loadPlugins</span><span class="p">(</span>
+    <span class="s1">'/path/to/your/plugin/directory'</span><span class="p">,</span> <span class="c1">// Path to where you stored your plugins</span>
+    <span class="s1">'YourApp\Plugin'</span>                  <span class="c1">// namespace defined in your plugins (see example above)</span>
+<span class="p">);</span>
+</pre></div>
+
+<h3>Your application</h3>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">\Zumba\Symbiosis\Event\Event</span><span class="p">;</span>
+
+<span class="c1">// Somewhere in your app, trigger plugins listening to event</span>
+<span class="nv">$event</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Event</span><span class="p">(</span><span class="s1">'sample.someevent'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'ping'</span> <span class="o">=&gt;</span> <span class="s1">'pong'</span><span class="p">));</span>
+<span class="nv">$event</span><span class="o">-&gt;</span><span class="na">trigger</span><span class="p">();</span>
+</pre></div>
+
+<h3>Output</h3>
+
+<div class="highlight"><pre>Array
+<span class="o">(</span>
+    <span class="o">[</span>ping<span class="o">]</span> <span class="o">=</span>&gt; pong
+<span class="o">)</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/zumba">zumba</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
