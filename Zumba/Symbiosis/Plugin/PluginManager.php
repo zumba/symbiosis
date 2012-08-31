@@ -88,6 +88,7 @@ class PluginManager {
 					}
 				}
 			}
+			closedir($handle);
 			// Order the plugin objects by priority
 			usort($classObjects, 'static::comparePriority');
 		}
