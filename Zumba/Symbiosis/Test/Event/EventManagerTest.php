@@ -26,7 +26,6 @@ class EventManagerTest extends TestCase {
 	public function tearDown() {
 		parent::tearDown();
 		EventManager::clearAll();
-		$this->order = array();
 	}
 
 	public function testRegistrationAndCallback() {
