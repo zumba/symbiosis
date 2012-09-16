@@ -21,9 +21,12 @@ use \Zumba\Symbiosis\Test\TestCase,
  */
 class EventManagerTest extends TestCase {
 
+	public static $order = array();
+
 	public function tearDown() {
 		parent::tearDown();
 		EventManager::clearAll();
+		$this->order = array();
 	}
 
 	public function testRegistrationAndCallback() {
@@ -109,6 +112,25 @@ class EventManagerTest extends TestCase {
 		});
 		$event->trigger();
 		$this->assertTrue($event->shouldPreventAction());
+	}
+
+	public function testEventPriority() {
+		// lower priority
+		$lowPriority = function(Event $event) {
+			EventManagerTest::$order[] = 3;
+		};
+		$highPriority = function(Event $event) {
+			EventManagerTest::$order[] = 1;
+		};
+		$alsoHighPriority = function(Event $event) {
+			EventManagerTest::$order[] = 2;
+		};
+		EventManager::register('test.event1', $lowPriority, EventManager::PRIORITY_LOW);
+		EventManager::register('test.event1', $highPriority, EventManager::PRIORITY_HIGH);
+		EventManager::register('test.event1', $alsoHighPriority, EventManager::PRIORITY_HIGH);
+		$event = new Event('test.event1');
+		$event->trigger();
+		$this->assertEquals(array(1, 2, 3), static::$order);
 	}
 
 }

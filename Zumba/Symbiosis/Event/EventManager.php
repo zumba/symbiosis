@@ -18,6 +18,11 @@ use \Zumba\Symbiosis\Event\Event,
 
 class EventManager {
 
+	// Constant event priorities
+	const PRIORITY_HIGH = 0;
+	const PRIORITY_MEDIUM = 1;
+	const PRIORITY_LOW = 2;
+
 	/**
 	 * Container of all event registrations.
 	 *
@@ -35,14 +40,15 @@ class EventManager {
 	 * @return void
 	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
 	 */
-	public static function register($events, $callback) {
+	public static function register($events, $callback, $priority = 0) {
 		if (!is_callable($callback)) {
 			throw new Exception\NotCallableException('Registration callback is not callable.');
 		}
 		$events = (array)$events;
 		foreach ($events as $event) {
-			static::$registry[$event][] = $callback;
+			static::$registry[$event][$priority][] = $callback;
 		}
+		ksort(static::$registry[$event]);
 	}
 
 	/**
@@ -62,13 +68,15 @@ class EventManager {
 			return false;
 		}
 		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
-		foreach (static::$registry[$eventName] as $listener) {
-			if (call_user_func_array($listener, array($event)) === false) {
-				$event->stopPropagation();
-			}
-			if (!$event->isPropagating()) {
-				Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
-				break;
+		foreach (static::$registry[$eventName] as $listeners) {
+			foreach ($listeners as $listener) {
+				if (call_user_func_array($listener, array($event)) === false) {
+					$event->stopPropagation();
+				}
+				if (!$event->isPropagating()) {
+					Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
+					break;
+				}
 			}
 		}
 		return true;
