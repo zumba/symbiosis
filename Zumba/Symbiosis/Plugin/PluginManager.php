@@ -23,7 +23,7 @@ class PluginManager {
 	 *
 	 * @var array
 	 */
-	protected static $classObjects;
+	protected static $classObjects = array();
 
 	/**
 	 * Load cart plugins in the cart plugin directory to register events.
@@ -33,10 +33,11 @@ class PluginManager {
 	 * @return void
 	 */
 	public static function loadPlugins($path, $namespace) {
-		static::$classObjects = static::buildPluginCache($path, $namespace);
-		foreach (static::$classObjects as $plugin) {
+		$objects = static::buildPluginCache($path, $namespace);
+		foreach ($objects as $plugin) {
 			static::initializePlugin($plugin);
 		}
+		static::$classObjects += $objects;
 	}
 
 	/**
@@ -46,8 +47,8 @@ class PluginManager {
 	 */
 	public static function getPluginList() {
 		$list = array();
-		foreach (static::$classObjects as $plugin) {
-			$list[get_class($plugin)] = $plugin->priority;
+		foreach (static::$classObjects as $classname => $plugin) {
+			$list[$classname] = $plugin->priority;
 		}
 
 		return $list;
@@ -84,13 +85,13 @@ class PluginManager {
 				if (class_exists($class)) {
 					$plugin = new $class();
 					if ($plugin->enabled) {
-						$classObjects[] = $plugin;
+						$classObjects[$class] = $plugin;
 					}
 				}
 			}
 			closedir($handle);
 			// Order the plugin objects by priority
-			usort($classObjects, 'static::comparePriority');
+			uasort($classObjects, 'static::comparePriority');
 		}
 
 		return $classObjects;
