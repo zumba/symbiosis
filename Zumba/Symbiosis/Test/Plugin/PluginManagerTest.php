@@ -33,4 +33,13 @@ class PluginManagerTest extends TestCase {
 		$this->assertEquals($expectedList, $pluginList);
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testNonExistentPluginDirectory() {
+		PluginManager::loadPlugins('/some/non-existent/directory', 'Test');
+		$pluginList = PluginManager::getPluginList();
+		$this->assertEmpty($pluginList);
+	}
+
 }

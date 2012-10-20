@@ -76,6 +76,10 @@ class PluginManager {
 	 */
 	protected static function buildPluginCache($path, $namespace) {
 		$classObjects = array();
+		if (!is_dir($path)) {
+			Log::write('Plugin path not a directory.', Log::LEVEL_WARNING, compact('path'));
+			return array();
+		}
 		if ($handle = \opendir($path)) {
 			while (false !== ($entry = \readdir($handle))) {
 				if ($entry === '.' || $entry === '..') {
