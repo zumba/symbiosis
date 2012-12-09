@@ -113,6 +113,16 @@ class EventManagerTest extends TestCase {
 		$this->assertTrue($event->shouldPreventAction());
 	}
 
+	public function testSuggestingPreventActionWithMessage() {
+		$event = new Event('test.event1');
+		EventManager::register('test.event1', function(Event $event) {
+			$event->preventAction(true, 'Reason why should prevent.');
+		});
+		$event->trigger();
+		$this->assertTrue($event->shouldPreventAction());
+		$this->assertEquals('Reason why should prevent.', $event->preventActionMessage());
+	}
+
 	public function testEventPriority() {
 		// lower priority
 		$lowPriority = function(Event $event) {
