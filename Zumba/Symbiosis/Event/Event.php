@@ -71,12 +71,19 @@ class Event {
 	/**
 	 * Get/set the data of this event.
 	 *
+	 * Append option is used to append passed data instead of over-writing.
+	 *
 	 * @param array $data
+	 * @param boolean $append Default no
 	 * @return array
 	 */
-	public function data($data = null) {
+	public function data($data = null, $append = false) {
 		if ($data !== null) {
-			$this->data = $data;
+			if ($append) {
+				$this->data += (array)$data;
+			} else {
+				$this->data = $data;
+			}
 		}
 		return $this->data;
 	}
