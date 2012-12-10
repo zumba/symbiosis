@@ -80,7 +80,7 @@ class Event {
 	public function data($data = null, $append = false) {
 		if ($data !== null) {
 			if ($append) {
-				$this->data += (array)$data;
+				$this->data = array_merge($this->data, (array)$data);
 			} else {
 				$this->data = $data;
 			}
