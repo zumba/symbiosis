@@ -45,6 +45,13 @@ class Event {
 	protected $shouldPreventAction = false;
 
 	/**
+	 * Reason to suggest to the application to stop further action.
+	 *
+	 * @var string
+	 */
+	protected $preventActionMessage = '';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $name
@@ -109,13 +116,24 @@ class Event {
 	}
 
 	/**
+	 * Gets the reason to prevent further actions.
+	 *
+	 * @return string
+	 */
+	public function preventActionMessage() {
+		return $this->preventActionMessage;
+	}
+
+	/**
 	 * Sets the suggestion of preventing further action.  Default true.
 	 *
 	 * @param boolean $prevent
+	 * @param string $message
 	 * @return void
 	 */
-	public function preventAction($prevent = true) {
+	public function preventAction($prevent = true, $message = '') {
 		$this->shouldPreventAction = (boolean)$prevent;
+		$this->preventActionMessage = (string)$message;
 	}
 
 	/**
