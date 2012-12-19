@@ -65,11 +65,11 @@ PluginManager::loadPlugins(
 
 ```php
 <?php
-
-use \Zumba\Symbiosis\Event\Event;
+// always alias to SymbiosisEvent to avoid a namespace collision.
+use \Zumba\Symbiosis\Event\Event as SymbiosisEvent;
 
 // Somewhere in your app, trigger plugins listening to event
-$event = new Event('sample.someevent', array('ping' => 'pong'));
+$event = new SymbiosisEvent('sample.someevent', array('ping' => 'pong'));
 $event->trigger();
 ```
 

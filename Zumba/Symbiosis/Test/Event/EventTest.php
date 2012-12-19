@@ -14,7 +14,7 @@ namespace Zumba\Symbiosis\Test\Event;
 
 use \Zumba\Symbiosis\Test\TestCase,
 	\Zumba\Symbiosis\Event\EventManager,
-	\Zumba\Symbiosis\Event\Event;
+	\Zumba\Symbiosis\Event\Event as SymbiosisEvent;
 
 /**
  * @group event
@@ -30,7 +30,7 @@ class EventTest extends TestCase {
 		$data = array(
 			'package' => true
 		);
-		$event = new Event('test', $data);
+		$event = new SymbiosisEvent('test', $data);
 		$this->assertEquals(array('package' => true), $event->data());
 		$event->data(array('package2' => true));
 		$this->assertEquals(array('package2' => true), $event->data());
@@ -40,7 +40,7 @@ class EventTest extends TestCase {
 		$data = array(
 			'package' => true
 		);
-		$event = new Event('test', $data);
+		$event = new SymbiosisEvent('test', $data);
 		$this->assertEquals(array('package' => true), $event->data());
 		$data2 = array(
 			'package2' => true
