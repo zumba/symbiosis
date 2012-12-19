@@ -12,7 +12,7 @@
  */
 namespace Zumba\Symbiosis\Event;
 
-use \Zumba\Symbiosis\Event\Event,
+use \Zumba\Symbiosis\Event\Event as SymbiosisEvent,
 	\Zumba\Symbiosis\Log,
 	\Zumba\Symbiosis\Exception;
 
@@ -60,7 +60,7 @@ class EventManager {
 	 * @param array $data Data to append/override in the event object
 	 * @return boolean
 	 */
-	public static function trigger(Event $event, $data = array()) {
+	public static function trigger(SymbiosisEvent $event, $data = array()) {
 		$eventName = $event->name();
 		$event->data(array_merge($event->data(), $data));
 		if (!isset(static::$registry[$eventName])) {

@@ -14,7 +14,7 @@ namespace Zumba\Symbiosis\Test\Event;
 
 use \Zumba\Symbiosis\Test\TestCase,
 	\Zumba\Symbiosis\Event\EventManager,
-	\Zumba\Symbiosis\Event\Event;
+	\Zumba\Symbiosis\Event\Event as SymbiosisEvent;
 
 /**
  * @group event
@@ -40,8 +40,8 @@ class EventManagerTest extends TestCase {
 		EventManager::register('test.event1', array($testObject, 'testCallback2'));
 		EventManager::register('test.event2', array($testObject, 'testCallback2'));
 
-		$event1 = new Event('test.event1');
-		$event2 = new Event('test.event2');
+		$event1 = new SymbiosisEvent('test.event1');
+		$event2 = new SymbiosisEvent('test.event2');
 		$this->assertTrue($event1->trigger());
 		$this->assertTrue($event2->trigger());
 	}
@@ -55,7 +55,7 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testTriggerWithNoListener() {
-		$event = new Event('test.event1');
+		$event = new SymbiosisEvent('test.event1');
 		$this->assertFalse($event->trigger());
 	}
 
@@ -65,7 +65,7 @@ class EventManagerTest extends TestCase {
 			->method('testCallback1');
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
 		EventManager::clear('test.event1');
-		$event = new Event('test.event1');
+		$event = new SymbiosisEvent('test.event1');
 		$event->trigger();
 	}
 
@@ -73,8 +73,8 @@ class EventManagerTest extends TestCase {
 		$testObject = $this->getMock('stdClass', array('testCallback1'));
 		$testObject->expects($this->never())
 			->method('testCallback1');
-		$event = new Event('test.event1');
-		EventManager::register('test.event1', function(Event $event) {
+		$event = new SymbiosisEvent('test.event1');
+		EventManager::register('test.event1', function(SymbiosisEvent $event) {
 			return false;
 		});
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
@@ -85,8 +85,8 @@ class EventManagerTest extends TestCase {
 		$testObject = $this->getMock('stdClass', array('testCallback1'));
 		$testObject->expects($this->never())
 			->method('testCallback1');
-		$event = new Event('test.event1');
-		EventManager::register('test.event1', function(Event $event) {
+		$event = new SymbiosisEvent('test.event1');
+		EventManager::register('test.event1', function(SymbiosisEvent $event) {
 			$event->stopPropagation();
 		});
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
@@ -98,15 +98,15 @@ class EventManagerTest extends TestCase {
 		$testObject->expects($this->once())
 			->method('testCallback1');
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
-		$event = new Event('test.event1');
+		$event = new SymbiosisEvent('test.event1');
 		$event->trigger();
 		$event->name('test.event2');
 		$event->trigger();
 	}
 
 	public function testSuggestingPreventAction() {
-		$event = new Event('test.event1');
-		EventManager::register('test.event1', function(Event $event) {
+		$event = new SymbiosisEvent('test.event1');
+		EventManager::register('test.event1', function(SymbiosisEvent $event) {
 			$event->preventAction();
 		});
 		$event->trigger();
@@ -114,8 +114,8 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testSuggestingPreventActionWithMessage() {
-		$event = new Event('test.event1');
-		EventManager::register('test.event1', function(Event $event) {
+		$event = new SymbiosisEvent('test.event1');
+		EventManager::register('test.event1', function(SymbiosisEvent $event) {
 			$event->preventAction(true, 'Reason why should prevent.');
 		});
 		$event->trigger();
@@ -125,19 +125,19 @@ class EventManagerTest extends TestCase {
 
 	public function testEventPriority() {
 		// lower priority
-		$lowPriority = function(Event $event) {
+		$lowPriority = function(SymbiosisEvent $event) {
 			EventManagerTest::$order[] = 3;
 		};
-		$highPriority = function(Event $event) {
+		$highPriority = function(SymbiosisEvent $event) {
 			EventManagerTest::$order[] = 1;
 		};
-		$alsoHighPriority = function(Event $event) {
+		$alsoHighPriority = function(SymbiosisEvent $event) {
 			EventManagerTest::$order[] = 2;
 		};
 		EventManager::register('test.event1', $lowPriority, EventManager::PRIORITY_LOW);
 		EventManager::register('test.event1', $highPriority, EventManager::PRIORITY_HIGH);
 		EventManager::register('test.event1', $alsoHighPriority, EventManager::PRIORITY_HIGH);
-		$event = new Event('test.event1');
+		$event = new SymbiosisEvent('test.event1');
 		$event->trigger();
 		$this->assertEquals(array(1, 2, 3), static::$order);
 	}
