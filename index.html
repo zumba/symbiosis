@@ -4,71 +4,62 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Symbiosis by zumba</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-
+    <div class="wrapper">
       <header>
         <h1>Symbiosis</h1>
         <p>Event system for drop in support of plugin architecture.</p>
+
+        <p class="view"><a href="https://github.com/zumba/symbiosis">View the Project on GitHub <small>zumba/symbiosis</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/zumba/symbiosis/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/zumba/symbiosis/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/zumba/symbiosis">View On <strong>GitHub</strong></a></li>
+        </ul>
       </header>
-
-      <div id="banner">
-        <span id="logo"></span>
-
-        <a href="https://github.com/zumba/symbiosis" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/zumba/symbiosis/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/zumba/symbiosis/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
       <section>
         <p>Symbiosis is a drop-in event driven plugin architecture.</p>
 
 <p>The goal is to allow anyone to create a plugin structure for their existing code base using an event oriented system.
 The secondary benefit of using Symbiosis is that the event structure can be used apart from the plugin structure.</p>
 
-<p><strong>Current Version</strong>: v1.1.2</p>
+<p><a href="https://packagist.org/packages/zumba/symbiosis"><img src="https://poser.pugx.org/zumba/symbiosis/v/stable.png" alt="Latest Stable Version"></a>
+<a href="http://travis-ci.org/zumba/symbiosis"><img src="https://secure.travis-ci.org/zumba/symbiosis.png" alt="Build Status"></a></p>
 
-<p><a href="http://travis-ci.org/zumba/symbiosis"><img src="https://secure.travis-ci.org/zumba/symbiosis.png" alt="Build Status"></a></p>
-
-<h2>Requirements</h2>
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
 <p>PHP 5.3+</p>
 
-<h2>Setup</h2>
+<h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
 
 <ol>
-<li>In your main application, you need to include the Symbiosis autoloader: <code>include_once 'symbiosis/autoload.php';</code>.</li>
+<li>Add as a composer dependency or install directly from composer.</li>
 <li>That's it!</li>
-</ol><h2>Testing</h2>
+</ol><h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
 
-<p>After cloning the repo, simply <code>cd</code> to the cloned directly and run:</p>
+<ol>
+<li>Run <code>composer install --dev</code>.</li>
+<li>Run <code>phpunit</code>.</li>
+</ol><h2>
+<a name="example-plugin" class="anchor" href="#example-plugin"><span class="octicon octicon-link"></span></a>Example Plugin</h2>
 
-<div class="highlight"><pre><span class="nv">$ </span>phpunit
-</pre></div>
+<h3>
+<a name="plugin" class="anchor" href="#plugin"><span class="octicon octicon-link"></span></a>Plugin</h3>
 
-<h2>Example Plugin</h2>
-
-<h3>Plugin</h3>
-
-<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">namespace</span> <span class="nx">\YourApp\Plugin</span><span class="p">;</span>
 
@@ -86,9 +77,10 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 <span class="p">}</span>
 </pre></div>
 
-<h3>Your application bootstrap</h3>
+<h3>
+<a name="your-application-bootstrap" class="anchor" href="#your-application-bootstrap"><span class="octicon octicon-link"></span></a>Your application bootstrap</h3>
 
-<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">use</span> <span class="nx">\Zumba\Symbiosis\Plugin\PluginManager</span><span class="p">;</span>
 
@@ -99,9 +91,10 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 <span class="p">);</span>
 </pre></div>
 
-<h3>Your application</h3>
+<h3>
+<a name="your-application" class="anchor" href="#your-application"><span class="octicon octicon-link"></span></a>Your application</h3>
 
-<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">use</span> <span class="nx">\Zumba\Symbiosis\Event\Event</span><span class="p">;</span>
 
@@ -110,20 +103,60 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">trigger</span><span class="p">();</span>
 </pre></div>
 
-<h3>Output</h3>
+<h3>
+<a name="output" class="anchor" href="#output"><span class="octicon octicon-link"></span></a>Output</h3>
 
-<div class="highlight"><pre>Array
-<span class="o">(</span>
-    <span class="o">[</span>ping<span class="o">]</span> <span class="o">=</span>&gt; pong
-<span class="o">)</span>
+<pre lang="shell"><code>Array
+(
+    [ping] =&gt; pong
+)
+</code></pre>
+
+<h2>
+<a name="individual-event-registries" class="anchor" href="#individual-event-registries"><span class="octicon octicon-link"></span></a>Individual Event Registries</h2>
+
+<p>As of <code>v1.2</code>, event registries have been added to allow for separation of events. This allows for "namespacing"
+your event registries. The <code>EventManager</code> remains backwards compatible as now the EventManager creates a static instance
+of an <code>EventRegistry</code>. Since the event structure is loosly coupled in the Plugin architecture, this allows for namespacing
+your event registries per plugin.</p>
+
+<h3>
+<a name="example-event-registry-namespacing" class="anchor" href="#example-event-registry-namespacing"><span class="octicon octicon-link"></span></a>Example Event Registry namespacing</h3>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="nv">$registry1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Zumba\Symbiosis\Event\EventRegistry</span><span class="p">();</span>
+<span class="nv">$registry2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Zumba\Symbiosis\Event\EventRegistry</span><span class="p">();</span>
+
+<span class="nv">$registry1</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="s1">'sample.someevent'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">print_r</span><span class="p">(</span><span class="nv">$event</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">());</span>
+<span class="p">});</span>
+<span class="nv">$registry2</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="s1">'sample.someevent'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Separate registry</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+    <span class="nb">print_r</span><span class="p">(</span><span class="nv">$event</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">());</span>
+<span class="p">});</span>
+
+<span class="nv">$event</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Zumba\Symbiosis\Event\Event</span><span class="p">(</span><span class="s1">'sample.someevent'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'ping'</span> <span class="o">=&gt;</span> <span class="s1">'pong'</span><span class="p">));</span>
+<span class="nv">$registry1</span><span class="o">-&gt;</span><span class="na">trigger</span><span class="p">(</span><span class="nv">$event</span><span class="p">);</span>
+<span class="c1">// Prints: </span>
+<span class="c1">// Array(</span>
+<span class="c1">//   [ping] =&gt; pong</span>
+<span class="c1">// )</span>
+
+<span class="nv">$registry2</span><span class="o">-&gt;</span><span class="na">trigger</span><span class="p">(</span><span class="nv">$event</span><span class="p">);</span>
+<span class="c1">// Prints:</span>
+<span class="c1">// Separate registry</span>
+<span class="c1">// Array(</span>
+<span class="c1">//   [ping] =&gt; pong</span>
+<span class="c1">// )</span>
 </pre></div>
       </section>
       <footer>
-        <p>Project maintained by <a href="https://github.com/zumba">zumba</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+        <p>This project is maintained by <a href="https://github.com/zumba">zumba</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
     
   </body>
 </html>
