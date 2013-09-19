@@ -19,6 +19,9 @@
         "php": ">=5.3.0"
     },
     "autoload": {
-        "files": ["autoload.php"]
+        "psr-0": {
+            "Zumba\\Symbiosis\\Test": "tests/",
+            "Zumba\\Symbiosis": "src/"
+        }
     }
 }
