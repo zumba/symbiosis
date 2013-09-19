@@ -3,7 +3,7 @@ Symbiosis is a drop-in event driven plugin architecture.
 The goal is to allow anyone to create a plugin structure for their existing code base using an event oriented system.
 The secondary benefit of using Symbiosis is that the event structure can be used apart from the plugin structure.
 
-[![Latest Stable Version](https://poser.pugx.org/slm/mail/v/stable.png)](https://packagist.org/packages/slm/mail)
+[![Latest Stable Version](https://poser.pugx.org/zumba/symbiosis/v/stable.png)](https://packagist.org/packages/zumba/symbiosis)
 [![Build Status](https://secure.travis-ci.org/zumba/symbiosis.png)](http://travis-ci.org/zumba/symbiosis)
 
 ## Requirements
