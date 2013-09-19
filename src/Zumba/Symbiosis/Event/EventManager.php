@@ -12,23 +12,16 @@
  */
 namespace Zumba\Symbiosis\Event;
 
-use \Zumba\Symbiosis\Event\Event,
-	\Zumba\Symbiosis\Log,
-	\Zumba\Symbiosis\Exception;
+use \Zumba\Symbiosis\Event\Event;
 
 class EventManager {
 
-	// Constant event priorities
-	const PRIORITY_HIGH = 0;
-	const PRIORITY_MEDIUM = 1;
-	const PRIORITY_LOW = 2;
-
 	/**
-	 * Container of all event registrations.
+	 * Global event registry.
 	 *
-	 * @var array
+	 * @var Zumba\Symbiosis\Event\EventRegistry
 	 */
-	protected static $registry = array();
+	protected static $registry;
 
 	/**
 	 * Register an event with a callback.
@@ -41,14 +34,8 @@ class EventManager {
 	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
 	 */
 	public static function register($events, $callback, $priority = 0) {
-		if (!is_callable($callback)) {
-			throw new Exception\NotCallableException('Registration callback is not callable.');
-		}
-		$events = (array)$events;
-		foreach ($events as $event) {
-			static::$registry[$event][$priority][] = $callback;
-		}
-		ksort(static::$registry[$event]);
+		static::initialize();
+		static::$registry->register($events, $callback, $priority);
 	}
 
 	/**
@@ -61,25 +48,8 @@ class EventManager {
 	 * @return boolean
 	 */
 	public static function trigger(Event $event, $data = array()) {
-		$eventName = $event->name();
-		$event->data(array_merge($event->data(), $data));
-		if (!isset(static::$registry[$eventName])) {
-			Log::write('No event registered.', Log::LEVEL_DEBUG, compact('eventName'));
-			return false;
-		}
-		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
-		foreach (static::$registry[$eventName] as $listeners) {
-			foreach ($listeners as $listener) {
-				if (call_user_func_array($listener, array($event)) === false) {
-					$event->stopPropagation();
-				}
-				if (!$event->isPropagating()) {
-					Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
-					break;
-				}
-			}
-		}
-		return true;
+		static::initialize();
+		return static::$registry->trigger($event, $data);
 	}
 
 	/**
@@ -89,10 +59,8 @@ class EventManager {
 	 * @return void
 	 */
 	public static function clear($event) {
-		Log::write('Clearing individual event.', Log::LEVEL_DEBUG, compact('event'));
-		if (isset(static::$registry[$event])) {
-			unset(static::$registry[$event]);
-		}
+		static::initialize();
+		static::$registry->clear($event);
 	}
 
 	/**
@@ -101,8 +69,19 @@ class EventManager {
 	 * @return void
 	 */
 	public static function clearAll() {
-		Log::write('Clearing all events.', Log::LEVEL_DEBUG);
-		static::$registry = array();
+		static::initialize();
+		static::$registry->clearAll();
+	}
+
+	/**
+	 * Properly initialize the global event registry.
+	 *
+	 * @return void
+	 */
+	protected static function initialize() {
+		if (!static::$registry instanceof EventRegistry) {
+			static::$registry = new EventRegistry();
+		}
 	}
 
 }
