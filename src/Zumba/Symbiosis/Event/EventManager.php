@@ -16,6 +16,11 @@ use \Zumba\Symbiosis\Event\Event;
 
 class EventManager {
 
+	// Backwards compatiblility constants.
+	const PRIORITY_HIGH = EventRegistry::PRIORITY_HIGH;
+	const PRIORITY_MEDIUM = EventRegistry::PRIORITY_MEDIUM;
+	const PRIORITY_LOW = EventRegistry::PRIORITY_LOW;
+
 	/**
 	 * Global event registry.
 	 *
