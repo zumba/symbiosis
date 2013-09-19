@@ -3,8 +3,7 @@ Symbiosis is a drop-in event driven plugin architecture.
 The goal is to allow anyone to create a plugin structure for their existing code base using an event oriented system.
 The secondary benefit of using Symbiosis is that the event structure can be used apart from the plugin structure.
 
-__Current Version__: v1.1.5
-
+[![Latest Stable Version](https://poser.pugx.org/slm/mail/v/stable.png)](https://packagist.org/packages/slm/mail)
 [![Build Status](https://secure.travis-ci.org/zumba/symbiosis.png)](http://travis-ci.org/zumba/symbiosis)
 
 ## Requirements
@@ -81,7 +80,7 @@ Array
 
 ## Individual Event Registries
 
-As of `v1.1.6`, event registries have been added to allow for separation of events. This allows for "namespacing"
+As of `v1.2`, event registries have been added to allow for separation of events. This allows for "namespacing"
 your event registries. The `EventManager` remains backwards compatible as now the EventManager creates a static instance
 of an `EventRegistry`. Since the event structure is loosly coupled in the Plugin architecture, this allows for namespacing
 your event registries per plugin.
