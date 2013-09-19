@@ -12,7 +12,8 @@
  */
 namespace Zumba\Symbiosis\Event;
 
-use \Zumba\Symbiosis\Event\EventManager;
+use \Zumba\Symbiosis\Event\EventRegistry,
+	\Zumba\Symbiosis\Event\EventManager;
 
 class Event {
 
@@ -146,10 +147,13 @@ class Event {
 	/**
 	 * Convenience method for triggering the event from the event object.
 	 *
+	 * @param  Zumba\Symbiosis\EventRegistry $registry Single registry instance if used outside of global context.
 	 * @return boolean
 	 */
-	public function trigger() {
-		return EventManager::trigger($this);
+	public function trigger(EventRegistry $registry = null) {
+		return $registry instanceof EventRegistry ?
+			$registry->trigger($this) :
+			EventManager::trigger($this);
 	}
 
 }
