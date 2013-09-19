@@ -13,16 +13,13 @@ PHP 5.3+
 
 ## Setup
 
-1. In your main application, you need to include the Symbiosis autoloader: `include_once 'symbiosis/autoload.php';`.
+1. Add as a composer dependency or install directly from composer.
 1. That's it!
 
 ## Testing
 
-After cloning the repo, simply `cd` to the cloned directly and run:
-
-```shell
-$ phpunit
-```
+1. Run `composer install --dev`.
+2. Run `phpunit`.
 
 ## Example Plugin
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit backupGlobals="false"
 		 backupStaticAttributes="false"
-		 bootstrap="./autoload.php"
+		 bootstrap="./tests/bootstrap.php"
 		 convertErrorsToExceptions="true"
 		 convertNoticesToExceptions="true"
 		 convertWarningsToExceptions="true"
@@ -11,27 +11,15 @@
 		 strict="true"
 		 colors="true">
 	<testsuites>
-		<testsuite name="Core Test Suite">
-			<directory suffix="Test.php">./Zumba/Symbiosis/Test</directory>
-		</testsuite>
-		<testsuite name="Event Test Suite">
-			<directory suffix="Test.php">./Zumba/Symbiosis/Test/Event</directory>
-		</testsuite>
-		<testsuite name="Plugin Test Suite">
-			<directory suffix="Test.php">./Zumba/Symbiosis/Test/Plugin</directory>
-		</testsuite>
-	</testsuites>
+        <testsuite>
+            <directory>./tests/Zumba/Symbiosis</directory>
+        </testsuite>
+    </testsuites>
 	<filter>
-		<blacklist>
-			<file>./autoload.php</file>
-			<file>./Zumba/AutoLoader.php</file>
-			<directory>./Zumba/Symbiosis/Test</directory>
-		</blacklist>
 		<whitelist addUncoveredFilesFromWhitelist="true">
-			<directory>./Zumba</directory>
+			<directory>./src/Zumba</directory>
 			<exclude>
-				<file>./Zumba/AutoLoader.php</file>
-				<directory>./Zumba/Symbiosis/Test</directory>
+				<file>./tests/bootstrap.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
