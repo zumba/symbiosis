@@ -102,7 +102,7 @@ $registry2->register('sample.someevent', function ($event) {
 	print_r($event->data());
 });
 
-$event = new Event('sample.someevent', array('ping' => 'pong'));
+$event = new \Zumba\Symbiosis\Event\Event('sample.someevent', array('ping' => 'pong'));
 $registry1->trigger($event);
 // Prints: 
 // Array(
