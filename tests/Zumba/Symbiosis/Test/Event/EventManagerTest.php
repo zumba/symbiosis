@@ -14,6 +14,7 @@ namespace Zumba\Symbiosis\Test\Event;
 
 use \Zumba\Symbiosis\Test\TestCase,
 	\Zumba\Symbiosis\Event\EventManager,
+	\Zumba\Symbiosis\Event\EventRegistry,
 	\Zumba\Symbiosis\Event\Event;
 
 /**
@@ -134,9 +135,9 @@ class EventManagerTest extends TestCase {
 		$alsoHighPriority = function(Event $event) {
 			EventManagerTest::$order[] = 2;
 		};
-		EventManager::register('test.event1', $lowPriority, EventManager::PRIORITY_LOW);
-		EventManager::register('test.event1', $highPriority, EventManager::PRIORITY_HIGH);
-		EventManager::register('test.event1', $alsoHighPriority, EventManager::PRIORITY_HIGH);
+		EventManager::register('test.event1', $lowPriority, EventRegistry::PRIORITY_LOW);
+		EventManager::register('test.event1', $highPriority, EventRegistry::PRIORITY_HIGH);
+		EventManager::register('test.event1', $alsoHighPriority, EventRegistry::PRIORITY_HIGH);
 		$event = new Event('test.event1');
 		$event->trigger();
 		$this->assertEquals(array(1, 2, 3), static::$order);
