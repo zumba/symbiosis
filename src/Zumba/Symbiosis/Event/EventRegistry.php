@@ -69,7 +69,7 @@ class EventRegistry {
 		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
 		foreach ($this->registry[$eventName] as $listeners) {
 			foreach ($listeners as $listener) {
-				if (call_user_func_array($listener, array($event)) === false) {
+				if ($listener($event) === false) {
 					$event->stopPropagation();
 				}
 				if (!$event->isPropagating()) {
