@@ -37,6 +37,15 @@ abstract class Plugin {
 	}
 
 	/**
+	 * Name this plugin.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return get_class($this);
+	}
+
+	/**
 	 * Main method called when plugin is initialized to register events to listen.
 	 *
 	 * @return void

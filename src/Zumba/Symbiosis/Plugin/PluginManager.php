@@ -111,6 +111,7 @@ class PluginManager {
 	 * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
 	 */
 	public function initializePlugin(Plugin $plugin) {
+		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, array('classname' => (string)$plugin);
 
 		return $plugin->registerEvents();
 	}
