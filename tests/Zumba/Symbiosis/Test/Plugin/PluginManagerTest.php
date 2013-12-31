@@ -21,8 +21,9 @@ use \Zumba\Symbiosis\Test\TestCase,
 class PluginManagerTest extends TestCase {
 
 	public function testLoadPluginsAndListing() {
-		PluginManager::loadPlugins(__DIR__ . '/SamplePlugins', 'Zumba\Symbiosis\Test\Plugin\SamplePlugins');
-		$pluginList = PluginManager::getPluginList();
+		$pluginManager = new PluginManager(__DIR__ . '/SamplePlugins', 'Zumba\Symbiosis\Test\Plugin\SamplePlugins');
+		$pluginManager->loadPlugins();
+		$pluginList = $pluginManager->getPluginList();
 		$this->assertCount(3, $pluginList);
 		// Confirm priority order
 		$expectedList = array(
@@ -37,8 +38,9 @@ class PluginManagerTest extends TestCase {
 	 * @runInSeparateProcess
 	 */
 	public function testNonExistentPluginDirectory() {
-		PluginManager::loadPlugins('/some/non-existent/directory', 'Test');
-		$pluginList = PluginManager::getPluginList();
+		$pluginManager = new PluginManager('/some/non-existent/directory', 'Test');
+		$pluginManager->loadPlugins();
+		$pluginList = $pluginManager->getPluginList();
 		$this->assertEmpty($pluginList);
 	}
 
