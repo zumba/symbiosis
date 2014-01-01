@@ -30,6 +30,12 @@ class EventRegistry {
 	protected $registry = array();
 
 	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+	}
+
+	/**
 	 * Register an event with a callback.
 	 *
 	 * Callback should be in form of function(array)
