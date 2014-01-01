@@ -47,7 +47,7 @@ class PluginManager {
 	/**
 	 * PluginManager event context.
 	 *
-	 * @var Zumba\Symbiosis\Plugin\EventContext
+	 * @var Zumba\Symbiosis\Plugin\EventRegistry
 	 */
 	protected $context;
 
@@ -137,11 +137,11 @@ class PluginManager {
 	/**
 	 * Get an instance of the event context for this plugin manager.
 	 *
-	 * @return Zumba\Symbiosis\Plugin\EventContext
+	 * @return Zumba\Symbiosis\Plugin\EventRegistry
 	 */
 	public function getContext() {
-		if (!$this->context instanceof EventContext) {
-			$this->context = new EventContext(new EventRegistry());
+		if (!$this->context instanceof EventRegistry) {
+			$this->context = new EventRegistry();
 		}
 		return $this->context;
 	}
@@ -154,10 +154,10 @@ class PluginManager {
 	 * @return boolean
 	 */
 	public function trigger(Event $event, $data = array()) {
-		if (!$this->context instanceof EventContext) {
+		if (!$this->context instanceof EventRegistry) {
 			return EventManager::trigger($event, $data);
 		}
-		return $this->context->registry()->trigger($event, $data);
+		return $this->context->trigger($event, $data);
 	}
 
 	/**

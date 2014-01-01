@@ -12,7 +12,7 @@
  */
 namespace Zumba\Symbiosis\Framework;
 
-use \Zumba\Symbiosis\Plugin\EventContext;
+use \Zumba\Symbiosis\Event\EventRegistry;
 
 abstract class Plugin {
 
@@ -35,7 +35,7 @@ abstract class Plugin {
 	/**
 	 * Plugin context for this plugin's instance.
 	 *
-	 * @var Zumba\Symbiosis\Plugin\EventContext
+	 * @var Zumba\Symbiosis\Plugin\EventRegistry
 	 */
 	protected $context;
 
@@ -48,10 +48,10 @@ abstract class Plugin {
 	/**
 	 * Get/set the event context for this plugin.
 	 * 
-	 * @param Zumba\Symbiosis\Plugin\EventContext $context
-	 * @return Zumba\Symbiosis\Plugin\EventContext
+	 * @param Zumba\Symbiosis\Plugin\EventRegistry $context
+	 * @return Zumba\Symbiosis\Plugin\EventRegistry
 	 */
-	public function eventContext(EventContext $context = null) {
+	public function eventContext(EventRegistry $context = null) {
 		if ($context !== null) {
 			$this->context = $context;
 		}
@@ -74,13 +74,12 @@ abstract class Plugin {
 	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
 	 */
 	public function bindPluginEvents() {
-		$registry = $this->context->registry();
 		foreach ($this->getEvents() as $key => $callbacks) {
 			if (is_array($callbacks) && (!isset($callbacks[0]) || !is_array($callbacks[0]))) {
 				$callbacks = [$callbacks];
 			}
 			foreach ((array)$callbacks as $callback) {
-				$registry->register($key, $callback);
+				$this->context->register($key, $callback);
 			}
 		}
 	}
