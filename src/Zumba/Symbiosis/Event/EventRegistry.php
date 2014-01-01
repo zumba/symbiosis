@@ -30,6 +30,12 @@ class EventRegistry {
 	protected $registry = array();
 
 	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+	}
+
+	/**
 	 * Register an event with a callback.
 	 *
 	 * Callback should be in form of function(array)
@@ -69,7 +75,7 @@ class EventRegistry {
 		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
 		foreach ($this->registry[$eventName] as $listeners) {
 			foreach ($listeners as $listener) {
-				if (call_user_func($listener, $event) === false) {
+				if ($listener($event) === false) {
 					$event->stopPropagation();
 				}
 				if (!$event->isPropagating()) {

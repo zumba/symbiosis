@@ -13,7 +13,8 @@
 namespace Zumba\Symbiosis\Test\Plugin;
 
 use \Zumba\Symbiosis\Test\TestCase,
-	\Zumba\Symbiosis\Plugin\PluginManager;
+	\Zumba\Symbiosis\Plugin\PluginManager,
+	\Zumba\Symbiosis\Event\Event;
 
 /**
  * @group plugin
@@ -21,8 +22,9 @@ use \Zumba\Symbiosis\Test\TestCase,
 class PluginManagerTest extends TestCase {
 
 	public function testLoadPluginsAndListing() {
-		PluginManager::loadPlugins(__DIR__ . '/SamplePlugins', 'Zumba\Symbiosis\Test\Plugin\SamplePlugins');
-		$pluginList = PluginManager::getPluginList();
+		$pluginManager = new PluginManager(__DIR__ . '/SamplePlugins', 'Zumba\Symbiosis\Test\Plugin\SamplePlugins');
+		$pluginManager->loadPlugins();
+		$pluginList = $pluginManager->getPluginList();
 		$this->assertCount(3, $pluginList);
 		// Confirm priority order
 		$expectedList = array(
@@ -37,9 +39,25 @@ class PluginManagerTest extends TestCase {
 	 * @runInSeparateProcess
 	 */
 	public function testNonExistentPluginDirectory() {
-		PluginManager::loadPlugins('/some/non-existent/directory', 'Test');
-		$pluginList = PluginManager::getPluginList();
+		$pluginManager = new PluginManager('/some/non-existent/directory', 'Test');
+		$pluginManager->loadPlugins();
+		$pluginList = $pluginManager->getPluginList();
 		$this->assertEmpty($pluginList);
+	}
+
+	public function testRegisterablePlugins() {
+		$pluginManager = new PluginManager(__DIR__ . '/Registerable', 'Zumba\Symbiosis\Test\Plugin\Registerable');
+		$pluginManager->loadPlugins();
+		$expectedList = [
+			'Zumba\Symbiosis\Test\Plugin\Registerable\TestPlugin' => 1
+		];
+		$this->assertEquals($expectedList, $pluginManager->getPluginList());
+		$event1 = new Event('register.1', array('called' => 0));
+		$event2 = new Event('register.2', array('called' => 0));
+		$pluginManager->trigger($event1);
+		$pluginManager->trigger($event2);
+		$this->assertEquals(['called' => 1], $event1->data());
+		$this->assertEquals(['called' => 2], $event2->data());
 	}
 
 }

@@ -13,31 +13,92 @@
 namespace Zumba\Symbiosis\Plugin;
 
 use \Zumba\Symbiosis\Framework\Plugin,
+	\Zumba\Symbiosis\Framework\Registerable,
+	\Zumba\Symbiosis\Framework\OpenEndable,
+	\Zumba\Symbiosis\Event\EventRegistry,
+	\Zumba\Symbiosis\Event\EventManager,
+	\Zumba\Symbiosis\Event\Event,
 	\Zumba\Symbiosis\Log,
 	\Zumba\Symbiosis\Exception;
 
 class PluginManager {
 
 	/**
+	 * Path location to plugin directory.
+	 *
+	 * @var string
+	 */
+	protected $path = '';
+
+	/**
+	 * Plugin namespace to be observed.
+	 *
+	 * @var string
+	 */
+	protected $namespace = '';
+
+	/**
 	 * Holder of all plugin class objects.
 	 *
 	 * @var array
 	 */
-	protected static $classObjects = array();
+	protected $classObjects = array();
+
+	/**
+	 * PluginManager event context.
+	 *
+	 * @var Zumba\Symbiosis\Plugin\EventRegistry
+	 */
+	protected $context;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param string $path Plugin file path.
+	 * @param string $namespace Plugin namespace.
+	 */
+	public function __construct($path, $namespace) {
+		$this->path = $path;
+		$this->namespace = $namespace;
+	}
+
+	/**
+	 * Get/set the plugin path.
+	 * 
+	 * @param string $path
+	 * @return string
+	 */
+	public function path($path = null) {
+		if ($path !== null) {
+			$this->path = $path;
+		}
+		return $this->path;
+	}
+
+	/**
+	 * Get/set the plugin namespace;
+	 *
+	 * @param string $namespace
+	 * @return string
+	 */
+	public function pluginNamespace($namespace = null) {
+		if ($namespace !== null) {
+			$this->namespace = $namespace;
+		}
+		return $this->namespace;
+	}
 
 	/**
 	 * Load cart plugins in the cart plugin directory to register events.
 	 *
-	 * @param string $path Path to plugin directory
-	 * @param string $namespace Plugin namespace for plugin classes
 	 * @return void
 	 */
-	public static function loadPlugins($path, $namespace) {
-		$objects = static::buildPluginCache($path, $namespace);
+	public function loadPlugins() {
+		$objects = $this->buildPluginCache();
 		foreach ($objects as $plugin) {
-			static::initializePlugin($plugin);
+			$this->initializePlugin($plugin);
 		}
-		static::$classObjects += $objects;
+		$this->classObjects += $objects;
 	}
 
 	/**
@@ -45,9 +106,9 @@ class PluginManager {
 	 *
 	 * @return array
 	 */
-	public static function getPluginList() {
+	public function getPluginList() {
 		$list = array();
-		foreach (static::$classObjects as $classname => $plugin) {
+		foreach ($this->classObjects as $classname => $plugin) {
 			$list[$classname] = $plugin->priority;
 		}
 
@@ -55,37 +116,67 @@ class PluginManager {
 	}
 
 	/**
-	 * Initialize a specific plugin by classname (note: full classname including namespace).
+	 * Initialize a specific plugin and binds its events.
 	 *
 	 * @param \Zumba\Symbiosis\Framework\Plugin $plugin Plugin instance.
 	 * @return mixed
 	 * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
 	 */
-	public static function initializePlugin(Plugin $plugin) {
-		$className = \get_class($plugin);
-		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, compact('className'));
+	public function initializePlugin(Plugin $plugin) {
+		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, array('classname' => (string)$plugin));
+		if ($plugin instanceof Registerable) {
+			$plugin->eventContext($this->getContext());
+			return $plugin->bindPluginEvents();
+		} elseif ($plugin instanceof OpenEndable) {
+			return $plugin->registerEvents();
+		}
+		Log::write('No plugin strategy implemented.', Log::LEVEL_WARNING, array('classname' => (string)$plugin));
+		return false;
+	}
 
-		return $plugin->registerEvents();
+	/**
+	 * Get an instance of the event context for this plugin manager.
+	 *
+	 * @return Zumba\Symbiosis\Plugin\EventRegistry
+	 */
+	public function getContext() {
+		if (!$this->context instanceof EventRegistry) {
+			$this->context = new EventRegistry();
+		}
+		return $this->context;
+	}
+
+	/**
+	 * Trigger an event to the bound context of this plugin manager.
+	 *
+	 * @param Zumba\Symbiosis\Event\Event $event
+	 * @param array $data
+	 * @return boolean
+	 */
+	public function trigger(Event $event, $data = array()) {
+		if (!$this->context instanceof EventRegistry) {
+			return EventManager::trigger($event, $data);
+		}
+		return $this->context->trigger($event, $data);
 	}
 
 	/**
 	 * Builds the plugin cache and gets an array of plugin objects.
 	 *
-	 * @param string $path Override path for where to look for plugin files.
 	 * @return array
 	 */
-	protected static function buildPluginCache($path, $namespace) {
+	protected function buildPluginCache() {
 		$classObjects = array();
-		if (!is_dir($path)) {
+		if (!is_dir($this->path)) {
 			Log::write('Plugin path not a directory.', Log::LEVEL_WARNING, compact('path'));
 			return array();
 		}
-		if ($handle = \opendir($path)) {
-			while (false !== ($entry = \readdir($handle))) {
+		if ($handle = opendir($this->path)) {
+			while (false !== ($entry = readdir($handle))) {
 				if ($entry === '.' || $entry === '..') {
 					continue;
 				}
-				$class = $namespace . '\\' . \basename($entry, '.php');
+				$class = $this->namespace . '\\' . basename($entry, '.php');
 				if (class_exists($class)) {
 					$plugin = new $class();
 					if ($plugin->enabled) {
@@ -95,7 +186,7 @@ class PluginManager {
 			}
 			closedir($handle);
 			// Order the plugin objects by priority
-			uasort($classObjects, 'static::comparePriority');
+			uasort($classObjects, array($this, 'comparePriority'));
 		}
 
 		return $classObjects;
@@ -108,7 +199,7 @@ class PluginManager {
 	 * @param \Zumba\Symbiosis\Framework\Plugin $b
 	 * @return integer
 	 */
-	public static function comparePriority(Plugin $a, Plugin $b) {
+	protected function comparePriority(Plugin $a, Plugin $b) {
 		if ($a->priority === $b->priority) {
 			return 0;
 		}
