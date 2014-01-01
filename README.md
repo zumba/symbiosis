@@ -8,7 +8,7 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 
 ## Requirements
 
-PHP 5.3+
+PHP 5.4+
 
 ## Setup
 
@@ -30,14 +30,17 @@ PHP 5.3+
 namespace \YourApp\Plugin;
 
 use \Zumba\Symbiosis\Framework\Plugin,
-    \Zumba\Symbiosis\Event\EventManager;
+    \Zumba\Symbiosis\Event\EventManager,
+    \Zumba\Symbiosis\Framework\Registerable;
 
-class SamplePlugin extends Plugin {
+class SamplePlugin extends Plugin implements Registerable {
 
-  public function registerEvents() {
-    EventManager::register('sample.someevent', function($event) {
-      print_r($event->data());
-    });
+  public function getEvents() {
+    return array(
+      'sample.someevent' => function($event) {
+        print_r($event->data());
+      });
+    );
   }
 
 }
@@ -51,10 +54,11 @@ class SamplePlugin extends Plugin {
 use \Zumba\Symbiosis\Plugin\PluginManager;
 
 // Somewhere in your application bootstrap, load your plugins
-PluginManager::loadPlugins(
-	'/path/to/your/plugin/directory', // Path to where you stored your plugins
-	'YourApp\Plugin'                  // namespace defined in your plugins (see example above)
+$pluginManager = new PluginManager(
+  '/path/to/your/plugin/directory', // Path to where you stored your plugins
+  'YourApp\Plugin'                  // namespace defined in your plugins (see example above)
 );
+$pluginManager->loadPlugins();
 ```
 
 ### Your application
@@ -65,8 +69,8 @@ PluginManager::loadPlugins(
 use \Zumba\Symbiosis\Event\Event;
 
 // Somewhere in your app, trigger plugins listening to event
-$event = new Event('sample.someevent', array('ping' => 'pong'));
-$event->trigger();
+$pluginManager->trigger(new Event('sample.someevent', array('ping' => 'pong')));
+
 ```
 
 ### Output

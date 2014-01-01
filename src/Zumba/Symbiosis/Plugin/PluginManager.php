@@ -13,6 +13,11 @@
 namespace Zumba\Symbiosis\Plugin;
 
 use \Zumba\Symbiosis\Framework\Plugin,
+	\Zumba\Symbiosis\Framework\Registerable,
+	\Zumba\Symbiosis\Framework\OpenEndable,
+	\Zumba\Symbiosis\Event\EventRegistry,
+	\Zumba\Symbiosis\Event\EventManager,
+	\Zumba\Symbiosis\Event\Event,
 	\Zumba\Symbiosis\Log,
 	\Zumba\Symbiosis\Exception;
 
@@ -38,6 +43,13 @@ class PluginManager {
 	 * @var array
 	 */
 	protected $classObjects = array();
+
+	/**
+	 * PluginManager event context.
+	 *
+	 * @var Zumba\Symbiosis\Plugin\EventContext
+	 */
+	protected $context;
 
 	/**
 	 * Constructor.
@@ -104,16 +116,48 @@ class PluginManager {
 	}
 
 	/**
-	 * Initialize a specific plugin by classname (note: full classname including namespace).
+	 * Initialize a specific plugin and binds its events.
 	 *
 	 * @param \Zumba\Symbiosis\Framework\Plugin $plugin Plugin instance.
 	 * @return mixed
 	 * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
 	 */
 	public function initializePlugin(Plugin $plugin) {
-		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, array('classname' => (string)$plugin);
+		Log::write('Initializing plugin.', Log::LEVEL_DEBUG, array('classname' => (string)$plugin));
+		if ($plugin instanceof Registerable) {
+			$plugin->eventContext($this->getContext());
+			return $plugin->bindPluginEvents();
+		} elseif ($plugin instanceof OpenEndable) {
+			return $plugin->registerEvents();
+		}
+		Log::write('No plugin strategy implemented.', Log::LEVEL_WARNING, array('classname' => (string)$plugin));
+		return false;
+	}
 
-		return $plugin->registerEvents();
+	/**
+	 * Get an instance of the event context for this plugin manager.
+	 *
+	 * @return Zumba\Symbiosis\Plugin\EventContext
+	 */
+	public function getContext() {
+		if (!$this->context instanceof EventContext) {
+			$this->context = new EventContext(new EventRegistry());
+		}
+		return $this->context;
+	}
+
+	/**
+	 * Trigger an event to the bound context of this plugin manager.
+	 *
+	 * @param Zumba\Symbiosis\Event\Event $event
+	 * @param array $data
+	 * @return boolean
+	 */
+	public function trigger(Event $event, $data = array()) {
+		if (!$this->context instanceof EventContext) {
+			return EventManager::trigger($event, $data);
+		}
+		return $this->context->registry()->trigger($event, $data);
 	}
 
 	/**
