@@ -14,7 +14,10 @@ namespace Zumba\Symbiosis\Test\Event;
 
 use \Zumba\Symbiosis\Test\TestCase,
 	\Zumba\Symbiosis\Event\EventManager,
-	\Zumba\Symbiosis\Event\Event;
+	\Zumba\Symbiosis\Event\Event,
+	\Zumba\Symbiosis\Plugin\PluginManager,
+	\Zumba\Symbiosis\Framework\Plugin,
+	\Zumba\Symbiosis\Framework\Registerable;
 
 /**
  * @group event
@@ -47,6 +50,19 @@ class EventTest extends TestCase {
 		);
 		$event->data($data2, true);
 		$this->assertEquals(array('package' => true, 'package2' => true), $event->data());
+	}
+
+	public function testPluginContext() {
+		$manager = new PluginManager('', '');
+		$testPlugin = $this->getMock('Zumba\Symbiosis\Test\Plugin\MockablePlugin', ['mockMe']);
+		$testPlugin
+			->expects($this->once())
+			->method('mockMe');
+		$manager->initializePlugin($testPlugin);
+		$event = new Event('test', ['val' => true]);
+		$event
+			->setPluginContext($manager)
+			->trigger();
 	}
 
 }
