@@ -147,6 +147,17 @@ class PluginManager {
 	}
 
 	/**
+	 * Create a new event that has this plugin as its context.
+	 *
+	 * @param string $name
+	 * @param array $data
+	 * @return Zumba\Symbiosis\Event\Event
+	 */
+	public function spawnEvent($name, $data = array()) {
+		return (new Event($name, $data))->setPluginContext($this);
+	}
+
+	/**
 	 * Trigger an event to the bound context of this plugin manager.
 	 *
 	 * @param Zumba\Symbiosis\Event\Event $event

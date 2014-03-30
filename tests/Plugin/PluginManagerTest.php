@@ -60,4 +60,17 @@ class PluginManagerTest extends TestCase {
 		$this->assertEquals(['called' => 2], $event2->data());
 	}
 
+	public function testEventSpawner() {
+		$pluginManager = new PluginManager('', '');
+		$testPlugin = $this->getMock('Zumba\Symbiosis\Test\Plugin\MockablePlugin', ['mockMe']);
+		$testPlugin
+			->expects($this->once())
+			->method('mockMe');
+		$pluginManager->initializePlugin($testPlugin);
+		$event = $pluginManager->spawnEvent('test', ['var' => 1]);
+		$this->assertInstanceOf('Zumba\Symbiosis\Event\Event', $event);
+		$this->assertEquals(['var' => 1], $event->data());
+		$event->trigger();
+	}
+
 }

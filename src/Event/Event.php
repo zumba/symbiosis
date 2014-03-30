@@ -13,7 +13,8 @@
 namespace Zumba\Symbiosis\Event;
 
 use \Zumba\Symbiosis\Event\EventRegistry,
-	\Zumba\Symbiosis\Event\EventManager;
+	\Zumba\Symbiosis\Event\EventManager,
+	\Zumba\Symbiosis\Plugin\PluginManager;
 
 class Event {
 
@@ -51,6 +52,13 @@ class Event {
 	 * @var string
 	 */
 	protected $preventActionMessage = '';
+
+	/**
+	 * Holds reference to plugin manager that spawned this event.
+	 *
+	 * @var Zumba\Symbiosis\Plugin\PluginManager
+	 */
+	protected $pluginContext;
 
 	/**
 	 * Constructor.
@@ -106,6 +114,17 @@ class Event {
 	}
 
 	/**
+	 * Set the plugin manager context for this event.
+	 *
+	 * @param PluginManager $manager
+	 * @return Zumba\Symbiosis\Event\Event
+	 */
+	public function setPluginContext(PluginManager $manager) {
+		$this->pluginContext = $manager;
+		return $this;
+	}
+
+	/**
 	 * Stops this event from propagating futher.
 	 *
 	 * @return void
@@ -151,6 +170,9 @@ class Event {
 	 * @return boolean
 	 */
 	public function trigger(EventRegistry $registry = null) {
+		if ($this->pluginContext) {
+			return $this->pluginContext->trigger($this);
+		}
 		return $registry instanceof EventRegistry ?
 			$registry->trigger($this) :
 			EventManager::trigger($this);
