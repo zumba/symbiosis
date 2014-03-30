@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Symbiosis, event structure for bootstrapping plugins.",
     "keywords": ["plugins", "events", "plugin", "event"],
-    "homepage": "http://engineer.zumba.com/symbiosis",
+    "homepage": "http://engineering.zumba.com/symbiosis",
     "license": "MIT",
     "authors": [
         {
