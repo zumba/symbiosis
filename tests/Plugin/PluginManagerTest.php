@@ -94,6 +94,13 @@ class PluginManagerTest extends TestCase {
 		$this->assertEquals($expectedList, $pluginList);
 	}
 
+	/**
+	 * @expectedException \Exception
+	 */
+	public function testLoadPluginsArrUsingInt() {
+		$pluginManager = new PluginManager(1, '');
+	}
+
 	public function testPluginNamespacePathGet() {
 		$path = array(
 			'Zumba\Symbiosis\Test\Plugin\SamplePlugins' => __DIR__ . '/SamplePlugins',

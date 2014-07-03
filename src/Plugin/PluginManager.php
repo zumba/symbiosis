@@ -24,7 +24,7 @@ use \Zumba\Symbiosis\Framework\Plugin,
 class PluginManager {
 
 	/**
-	 * Constant for directory separator - note different from PHP's own constant
+	 * Constant for namespace separator - note different from PHP's own constant
 	 */
 	const NAMESPACE_SEPARATOR = '\\';
 
@@ -64,7 +64,11 @@ class PluginManager {
 	 * @param string $namespace Plugin namespace. Deprecated
 	 */
 	public function __construct($path, $namespace = '') {
-		$this->path = (!is_string($path)) ? (array)$path : array($namespace => $path);
+		if (!is_string($path) && !is_array($path)) {
+			throw new \Exception('The path given is not in a valid format. Expected array or string.');
+		}
+
+		$this->path = (!is_string($path)) ? $path : array($namespace => $path);
 	}
 
 	/**
