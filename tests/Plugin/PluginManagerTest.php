@@ -73,4 +73,55 @@ class PluginManagerTest extends TestCase {
 		$event->trigger();
 	}
 
+	public function testLoadPluginsArrAndListing() {
+		$path = array(
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins' => __DIR__ . '/SamplePlugins',
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2' => __DIR__ . '/SamplePlugins/Namespace2',
+		);
+		$pluginManager = new PluginManager($path);
+		$pluginManager->loadPlugins();
+		$pluginList = $pluginManager->getPluginList();
+
+		$this->assertCount(5, $pluginList);
+		// Confirm priority order
+		$expectedList = array(
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2\TestBPlugin' => 1,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2\TestAPlugin' => 2,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestBPlugin' => 1,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestAPlugin' => 2,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestCPlugin' => 2
+		);
+		$this->assertEquals($expectedList, $pluginList);
+	}
+
+	public function testPluginNamespacePathGet() {
+		$path = array(
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins' => __DIR__ . '/SamplePlugins',
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2' => __DIR__ . '/SamplePlugins/Namespace2',
+		);
+		$pluginManager = new PluginManager($path);
+		$pathList = $pluginManager->pluginNamespacePath();
+		$this->assertCount(2, $pathList);
+	}
+
+	public function testPluginNamespacePathSet() {
+		$path = array(
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins' => __DIR__ . '/SamplePlugins',
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2' => __DIR__ . '/SamplePlugins/Namespace2',
+		);
+		$pluginManager = new PluginManager(array());
+		$pathList = $pluginManager->pluginNamespacePath($path);
+		$this->assertCount(2, $pathList);
+	}
+
+	public function testPluginNamespacePathSet2() {
+		$path = array(
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins' => __DIR__ . '/SamplePlugins',
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2' => __DIR__ . '/SamplePlugins/Namespace2'
+		);
+		$pluginManager = new PluginManager($path);
+		$oneMore = array('Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace3' => __DIR__ . '/SamplePlugins/Namespace3');
+		$pathList = $pluginManager->pluginNamespacePath($oneMore);
+		$this->assertCount(1, $pathList);
+	}
 }

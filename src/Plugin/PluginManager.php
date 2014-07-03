@@ -24,9 +24,14 @@ use \Zumba\Symbiosis\Framework\Plugin,
 class PluginManager {
 
 	/**
-	 * Path location to plugin directory.
+	 * Constant for directory separator - note different from PHP's own constant
+	 */
+	const DIR_SEPARATOR = '\\';
+
+	/**
+	 * An array with a set of namespace => path
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected $path = '';
 
@@ -34,8 +39,9 @@ class PluginManager {
 	 * Plugin namespace to be observed.
 	 *
 	 * @var string
+	 * @deprecated
 	 */
-	protected $namespace = '';
+	protected $namespace = null;
 
 	/**
 	 * Holder of all plugin class objects.
@@ -54,12 +60,11 @@ class PluginManager {
 	/**
 	 * Constructor.
 	 * 
-	 * @param string $path Plugin file path.
-	 * @param string $namespace Plugin namespace.
+	 * @param array $path Plugin file path. An array where the namespace is the key and the path is the value
+	 * @param string $namespace Plugin namespace. Deprecated
 	 */
-	public function __construct($path, $namespace) {
-		$this->path = $path;
-		$this->namespace = $namespace;
+	public function __construct($path, $namespace = '') {
+		$this->path = (!is_string($path)) ? (array)$path : array($namespace => $path);
 	}
 
 	/**
@@ -67,10 +72,11 @@ class PluginManager {
 	 * 
 	 * @param string $path
 	 * @return string
+	 * @deprecated
 	 */
 	public function path($path = null) {
 		if ($path !== null) {
-			$this->path = $path;
+			$this->path = !is_string($path) ? array_shift($path) : $path;
 		}
 		return $this->path;
 	}
@@ -80,12 +86,31 @@ class PluginManager {
 	 *
 	 * @param string $namespace
 	 * @return string
+	 * @deprecated
 	 */
 	public function pluginNamespace($namespace = null) {
 		if ($namespace !== null) {
-			$this->namespace = $namespace;
+			$this->namespace = !is_string($this->path) ? null : $namespace;
+		}
+
+		if (!is_string($this->path)) {
+			reset($this->path);
+			$this->namespace = key($this->path);
 		}
 		return $this->namespace;
+	}
+
+	/**
+	 * Will set/get to the plugin path / namespace array or retrive it's items
+	 *
+	 * @param array $pluginArr An array where the key is the namespace and the path is value
+	 * @return array
+	 */
+	public function pluginNamespacePath($pluginArr = array()) {
+		if (is_array($pluginArr) && !empty($pluginArr)) {
+			$this->path = $pluginArr;
+		}
+		return $this->path;
 	}
 
 	/**
@@ -111,7 +136,6 @@ class PluginManager {
 		foreach ($this->classObjects as $classname => $plugin) {
 			$list[$classname] = $plugin->priority;
 		}
-
 		return $list;
 	}
 
@@ -178,26 +202,49 @@ class PluginManager {
 	 */
 	protected function buildPluginCache() {
 		$classObjects = array();
-		if (!is_dir($this->path)) {
-			Log::write('Plugin path not a directory.', Log::LEVEL_WARNING, compact('path'));
-			return array();
+
+		if (!is_array($this->path)) {
+			return $classObjects;
 		}
-		if ($handle = opendir($this->path)) {
-			while (false !== ($entry = readdir($handle))) {
-				if ($entry === '.' || $entry === '..') {
-					continue;
-				}
-				$class = $this->namespace . '\\' . basename($entry, '.php');
-				if (class_exists($class)) {
-					$plugin = new $class();
-					if ($plugin->enabled) {
-						$classObjects[$class] = $plugin;
+
+		foreach ($this->path as $namespace => $path) {
+			if (!is_string($path) || !is_string($namespace)) {
+				// avoiding numeric indexes or values
+				Log::write('Either the path or the namespace is not correctly set.', Log::LEVEL_WARNING, compact('path', 'namespace'));
+				continue;
+			}
+
+			if (!is_dir($path)) {
+				Log::write('Plugin path not a directory.', Log::LEVEL_WARNING, compact('path'));
+				continue;
+			}
+
+			try {
+				$iterator = new \DirectoryIterator($path);
+				foreach ($iterator as $dirInfo) {
+					if ($dirInfo->isDot() || !$dirInfo->isFile()) {
+						continue;
+					}
+	
+					$class = $namespace . static::DIR_SEPARATOR . $dirInfo->getBasename('.php');
+					if (class_exists($class)) {
+						$plugin = new $class();
+						if ($plugin->enabled) {
+							$classObjects[$class] = $plugin;
+						}
 					}
 				}
+
+				if (!empty($classObjects)) {
+					uasort($classObjects, array($this, 'comparePriority'));
+				}
+			} catch (\Exception $e) {
+				Log::write('Exception created while building cache.', Log::LEVEL_ERROR, array(
+					'message' => $e->getMessage(),
+					'path' => $path,
+					'namespace' => $namespace
+				));
 			}
-			closedir($handle);
-			// Order the plugin objects by priority
-			uasort($classObjects, array($this, 'comparePriority'));
 		}
 
 		return $classObjects;
