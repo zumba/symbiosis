@@ -74,8 +74,8 @@ class PluginManager {
 	/**
 	 * Get/set the plugin path.
 	 * 
-	 * @param string $path
-	 * @return string
+	 * @param string|array $path
+	 * @return array
 	 * @deprecated
 	 */
 	public function path($path = null) {
