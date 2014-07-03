@@ -26,14 +26,14 @@ class PluginManager {
 	/**
 	 * Constant for directory separator - note different from PHP's own constant
 	 */
-	const DIR_SEPARATOR = '\\';
+	const NAMESPACE_SEPARATOR = '\\';
 
 	/**
 	 * An array with a set of namespace => path
 	 *
 	 * @var array
 	 */
-	protected $path = '';
+	protected $path = array();
 
 	/**
 	 * Plugin namespace to be observed.
@@ -60,7 +60,7 @@ class PluginManager {
 	/**
 	 * Constructor.
 	 * 
-	 * @param array $path Plugin file path. An array where the namespace is the key and the path is the value
+	 * @param array|string $path Plugin file path. An array where the namespace is the key and the path is the value
 	 * @param string $namespace Plugin namespace. Deprecated
 	 */
 	public function __construct($path, $namespace = '') {
@@ -226,7 +226,7 @@ class PluginManager {
 						continue;
 					}
 	
-					$class = $namespace . static::DIR_SEPARATOR . $dirInfo->getBasename('.php');
+					$class = $namespace . static::NAMESPACE_SEPARATOR . $dirInfo->getBasename('.php');
 					if (class_exists($class)) {
 						$plugin = new $class();
 						if ($plugin->enabled) {
