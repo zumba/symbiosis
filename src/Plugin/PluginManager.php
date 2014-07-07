@@ -35,13 +35,6 @@ class PluginManager {
 	 */
 	protected $path = array();
 
-	/**
-	 * Plugin namespace to be observed.
-	 *
-	 * @var string
-	 * @deprecated
-	 */
-	protected $namespace = null;
 
 	/**
 	 * Holder of all plugin class objects.
@@ -80,13 +73,15 @@ class PluginManager {
 	 */
 	public function path($path = null) {
 		if ($path !== null) {
-			$this->path = !is_string($path) ? array_shift($path) : $path;
+			$this->path = (!is_string($path)) ? $path : array('' => $path);
 		}
+
 		return $this->path;
 	}
 
 	/**
 	 * Get/set the plugin namespace;
+	 * Note this will only affect the 1st path
 	 *
 	 * @param string $namespace
 	 * @return string
@@ -94,14 +89,20 @@ class PluginManager {
 	 */
 	public function pluginNamespace($namespace = null) {
 		if ($namespace !== null) {
-			$this->namespace = !is_string($this->path) ? null : $namespace;
+			if (!is_string($this->path)) {
+				// gettign 1st element
+				reset($this->path);
+				$firstKey = key($this->path);
+				$firstValue = $this->path[$firstKey];
+				unset($this->path[$firstKey]);
+				$this->path += array($namespace => $firstValue);
+			} else {
+				$this->path = array($namespace => $this->path);
+			}
 		}
 
-		if (!is_string($this->path)) {
-			reset($this->path);
-			$this->namespace = key($this->path);
-		}
-		return $this->namespace;
+		reset($this->path);
+		return key($this->path);
 	}
 
 	/**
@@ -140,6 +141,7 @@ class PluginManager {
 		foreach ($this->classObjects as $classname => $plugin) {
 			$list[$classname] = $plugin->priority;
 		}
+
 		return $list;
 	}
 
@@ -238,10 +240,6 @@ class PluginManager {
 						}
 					}
 				}
-
-				if (!empty($classObjects)) {
-					uasort($classObjects, array($this, 'comparePriority'));
-				}
 			} catch (\Exception $e) {
 				Log::write('Exception created while building cache.', Log::LEVEL_ERROR, array(
 					'message' => $e->getMessage(),
@@ -249,6 +247,10 @@ class PluginManager {
 					'namespace' => $namespace
 				));
 			}
+		}
+
+		if (!empty($classObjects)) {
+			uasort($classObjects, array($this, 'comparePriority'));
 		}
 
 		return $classObjects;

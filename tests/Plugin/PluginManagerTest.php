@@ -86,11 +86,12 @@ class PluginManagerTest extends TestCase {
 		// Confirm priority order
 		$expectedList = array(
 			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2\TestBPlugin' => 1,
-			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2\TestAPlugin' => 2,
 			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestBPlugin' => 1,
-			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestAPlugin' => 2,
-			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestCPlugin' => 2
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\Namespace2\TestAPlugin' => 2,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestCPlugin' => 2,
+			'Zumba\Symbiosis\Test\Plugin\SamplePlugins\TestAPlugin' => 2
 		);
+
 		$this->assertEquals($expectedList, $pluginList);
 	}
 
