@@ -17,7 +17,7 @@ use \Zumba\Symbiosis\Log;
 class LogTest extends TestCase {
 
 	public function testReceiver() {
-		$fake = $this->getMock('stdClass', array('log'));
+		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
 		$fake->expects($this->once())
 			->method('log')
 			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_DEBUG));
@@ -26,15 +26,13 @@ class LogTest extends TestCase {
 		Log::write('Any message', Log::LEVEL_DEBUG);
 	}
 
-	/**
-	 * @expectedException Zumba\Symbiosis\Exception\NotCallableException
-	 */
 	public function testWrongReceiver() {
+		$this->expectException('Zumba\Symbiosis\Exception\NotCallableException');
 		Log::receive('something wrong');
 	}
 
 	public function testLevelMinimum() {
-		$fake = $this->getMock('stdClass', array('log'));
+		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
 		Log::receive(array($fake, 'log'));
 		Log::minLevel(Log::LEVEL_DEBUG);
 
@@ -50,7 +48,7 @@ class LogTest extends TestCase {
 	}
 
 	public function testLevelSpecific() {
-		$fake = $this->getMock('stdClass', array('log'));
+		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
 		Log::receive(array($fake, 'log'));
 		Log::minLevel(Log::LEVEL_WARNING);
 
@@ -70,7 +68,7 @@ class LogTest extends TestCase {
 	}
 
 	public function testLogDetails() {
-		$fake = $this->getMock('stdClass', array('log'));
+		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
 		Log::receive(array($fake, 'log'));
 		Log::minLevel(Log::LEVEL_DEBUG);
 

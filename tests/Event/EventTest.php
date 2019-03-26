@@ -24,7 +24,7 @@ use \Zumba\Symbiosis\Test\TestCase,
  */
 class EventTest extends TestCase {
 
-	public function tearDown() {
+	public function tearDown() : void {
 		parent::tearDown();
 		EventManager::clearAll();
 	}
@@ -54,7 +54,7 @@ class EventTest extends TestCase {
 
 	public function testPluginContext() {
 		$manager = new PluginManager('', '');
-		$testPlugin = $this->getMock('Zumba\Symbiosis\Test\Plugin\MockablePlugin', ['mockMe']);
+		$testPlugin = $this->getMockBuilder('Zumba\Symbiosis\Test\Plugin\MockablePlugin')->setMethods(['mockMe'])->getMock();
 		$testPlugin
 			->expects($this->once())
 			->method('mockMe');
