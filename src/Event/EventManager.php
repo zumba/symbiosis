@@ -14,9 +14,13 @@ namespace Zumba\Symbiosis\Event;
 
 use \Zumba\Symbiosis\Event\Event;
 
+/**
+ * @deprecated Will be removed soon.
+ * @see `EventRegistry`
+ */
 class EventManager {
 
-	// Backwards compatiblility constants.
+	// Backwards compatibility constants.
 	const PRIORITY_HIGH = EventRegistry::PRIORITY_HIGH;
 	const PRIORITY_MEDIUM = EventRegistry::PRIORITY_MEDIUM;
 	const PRIORITY_LOW = EventRegistry::PRIORITY_LOW;

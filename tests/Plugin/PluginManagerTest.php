@@ -62,7 +62,7 @@ class PluginManagerTest extends TestCase {
 
 	public function testEventSpawner() {
 		$pluginManager = new PluginManager('', '');
-		$testPlugin = $this->getMock('Zumba\Symbiosis\Test\Plugin\MockablePlugin', ['mockMe']);
+		$testPlugin = $this->getMockBuilder('Zumba\Symbiosis\Test\Plugin\MockablePlugin')->setMethods(['mockMe'])->getMock();
 		$testPlugin
 			->expects($this->once())
 			->method('mockMe');

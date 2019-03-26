@@ -24,13 +24,13 @@ class EventManagerTest extends TestCase {
 
 	public static $order = array();
 
-	public function tearDown() {
+	public function tearDown() : void {
 		parent::tearDown();
 		EventManager::clearAll();
 	}
 
 	public function testRegistrationAndCallback() {
-		$testObject = $this->getMock('stdClass', array('testCallback1', 'testCallback2'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1', 'testCallback2'])->getMock();
 		$testObject->expects($this->once())
 			->method('testCallback1')
 			->with($this->isInstanceOf('Zumba\Symbiosis\Event\Event'));
@@ -47,10 +47,8 @@ class EventManagerTest extends TestCase {
 		$this->assertTrue($event2->trigger());
 	}
 
-	/**
-	 * @expectedException Zumba\Symbiosis\Exception\NotCallableException
-	 */
 	public function testInvalidRegistration() {
+		$this->expectException('Zumba\Symbiosis\Exception\NotCallableException');
 		$obj = new \stdClass();
 		EventManager::register('uncallable', array($obj, 'uncallable'));
 	}
@@ -61,7 +59,7 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testClearEvent() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));
@@ -71,7 +69,7 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testStopPropagationVarient1() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		$event = new Event('test.event1');
@@ -83,7 +81,7 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testStopPropagationVarient2() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		$event = new Event('test.event1');
@@ -95,7 +93,7 @@ class EventManagerTest extends TestCase {
 	}
 
 	public function testEventName() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->once())
 			->method('testCallback1');
 		EventManager::register('test.event1', array($testObject, 'testCallback1'));

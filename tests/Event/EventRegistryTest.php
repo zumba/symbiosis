@@ -25,18 +25,18 @@ class EventRegisryTest extends TestCase {
 
 	public static $order = array();
 
-	public function setUp() {
+	public function setUp() : void {
 		parent::setUp();
 		$this->registry = new EventRegistry();
 	}
 
-	public function tearDown() {
+	public function tearDown() : void {
 		parent::tearDown();
 		unset($this->registry);
 	}
 
 	public function testRegistrationAndCallback() {
-		$testObject = $this->getMock('stdClass', array('testCallback1', 'testCallback2'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1', 'testCallback2'])->getMock();
 		$testObject->expects($this->once())
 			->method('testCallback1')
 			->with($this->isInstanceOf('Zumba\Symbiosis\Event\Event'));
@@ -53,10 +53,8 @@ class EventRegisryTest extends TestCase {
 		$this->assertTrue($event2->trigger($this->registry));
 	}
 
-	/**
-	 * @expectedException Zumba\Symbiosis\Exception\NotCallableException
-	 */
 	public function testInvalidRegistration() {
+		$this->expectException('Zumba\Symbiosis\Exception\NotCallableException');
 		$obj = new \stdClass();
 		$this->registry->register('uncallable', array($obj, 'uncallable'));
 	}
@@ -67,7 +65,7 @@ class EventRegisryTest extends TestCase {
 	}
 
 	public function testClearEvent() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		$this->registry->register('test.event1', array($testObject, 'testCallback1'));
@@ -77,7 +75,7 @@ class EventRegisryTest extends TestCase {
 	}
 
 	public function testStopPropagationVarient1() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		$event = new Event('test.event1', array());
@@ -89,7 +87,7 @@ class EventRegisryTest extends TestCase {
 	}
 
 	public function testStopPropagationVarient2() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->never())
 			->method('testCallback1');
 		$event = new Event('test.event1', array());
@@ -101,7 +99,7 @@ class EventRegisryTest extends TestCase {
 	}
 
 	public function testEventName() {
-		$testObject = $this->getMock('stdClass', array('testCallback1'));
+		$testObject = $this->getMockBuilder('stdClass')->setMethods(['testCallback1'])->getMock();
 		$testObject->expects($this->once())
 			->method('testCallback1');
 		$this->registry->register('test.event1', array($testObject, 'testCallback1'));
@@ -155,6 +153,36 @@ class EventRegisryTest extends TestCase {
 		$this->registry->trigger($event);
 		$data = $event->data();
 		$this->assertEquals(array(1, 2, 3), $data['order']);
+	}
+
+	public function testGetListenersForEvent() {
+		$event = new Event('test.event1', array());
+		$called = ['a' => 0, 'b' => 0];
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['a'] = 1;
+		});
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['b'] = 1;
+		});
+		$listeners = iterator_to_array($this->registry->getListenersForEvent($event));
+		$this->assertCount(2, $listeners);
+		foreach ($listeners as $listener) {
+			$listener($event);
+		}
+		$this->assertEquals(['a' => 1, 'b' => 1], $called);
+	}
+
+	public function testDispatch() {
+		$event = new Event('test.event1', array());
+		$called = ['a' => 0, 'b' => 0];
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['a'] = 1;
+		});
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['b'] = 1;
+		});
+		$this->registry->dispatch($event);
+		$this->assertEquals(['a' => 1, 'b' => 1], $called);
 	}
 
 }
