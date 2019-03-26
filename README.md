@@ -8,7 +8,7 @@ The secondary benefit of using Symbiosis is that the event structure can be used
 
 ## Requirements
 
-PHP 5.4+
+PHP 7.2
 
 ## Setup
 
@@ -18,9 +18,9 @@ PHP 5.4+
 ## Testing
 
 1. Run `composer install --dev`.
-2. Run `phpunit`.
+2. Run `./vendor/bin/phpunit`.
 
-## Example Plugin
+## Example Plugin Usage
 
 ### Plugin
 
@@ -33,14 +33,15 @@ use \Zumba\Symbiosis\Framework\Plugin,
     \Zumba\Symbiosis\Event\EventManager,
     \Zumba\Symbiosis\Framework\Registerable;
 
-class SamplePlugin extends Plugin implements Registerable {
-
-  public function getEvents() {
-    return array(
+class SamplePlugin extends Plugin implements Registerable
+{
+  public function getEvents()
+  {
+    return [
       'sample.someevent' => function($event) {
         print_r($event->data());
       });
-    );
+    ];
   }
 
 }
@@ -69,7 +70,7 @@ $pluginManager->loadPlugins();
 use \Zumba\Symbiosis\Event\Event;
 
 // Somewhere in your app, trigger plugins listening to event
-$pluginManager->trigger(new Event('sample.someevent', array('ping' => 'pong')));
+$pluginManager->trigger(new Event('sample.someevent', ['ping' => 'pong']));
 
 ```
 
@@ -84,10 +85,7 @@ Array
 
 ## Individual Event Registries
 
-As of `v1.2`, event registries have been added to allow for separation of events. This allows for "namespacing"
-your event registries. The `EventManager` remains backwards compatible as now the EventManager creates a static instance
-of an `EventRegistry`. Since the event structure is loosly coupled in the Plugin architecture, this allows for namespacing
-your event registries per plugin.
+As of `v1.2`, event registries have been added to allow for separation of events. This allows for "namespacing" your event registries. The `EventManager` remains backwards compatible as now the EventManager creates a static instance of an `EventRegistry`. Since the event structure is loosely coupled in the Plugin architecture, this allows for namespacing your event registries per plugin.
 
 ### Example Event Registry namespacing
 
@@ -106,15 +104,34 @@ $registry2->register('sample.someevent', function ($event) {
 });
 
 $event = new \Zumba\Symbiosis\Event\Event('sample.someevent', array('ping' => 'pong'));
-$registry1->trigger($event);
-// Prints: 
+$registry1->dispatch($event);
+// Prints:
 // Array(
 //   [ping] => pong
 // )
 
-$registry2->trigger($event);
+$registry2->dispatch($event);
 // Prints:
 // Separate registry
 // Array(
 //   [ping] => pong
 // )
+
+```
+
+### PSR-14 Support
+
+This library is compatible with PSR-14.
+
+> One caveat is that the `EventRegistry` requires registration of events that implement `\Zumba\Symbiosis\Framework\EventInterface` which includes the `\Psr\EventDispatcher\StoppableEventInterface`.
+
+`EventRegistry` implements:
+
+* `\Psr\EventDispatcher\ListenerProviderInterface`
+* `\Psr\EventDispatcher\EventDispatcherInterface`
+
+`Event` implements:
+
+* `\Psr\EventDispatcher\StoppableEventInterface`
+
+See [PSR-14 Event Dispatcher Documentation](https://www.php-fig.org/psr/psr-14/) for more details.

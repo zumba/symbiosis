@@ -155,4 +155,34 @@ class EventRegisryTest extends TestCase {
 		$this->assertEquals(array(1, 2, 3), $data['order']);
 	}
 
+	public function testGetListenersForEvent() {
+		$event = new Event('test.event1', array());
+		$called = ['a' => 0, 'b' => 0];
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['a'] = 1;
+		});
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['b'] = 1;
+		});
+		$listeners = iterator_to_array($this->registry->getListenersForEvent($event));
+		$this->assertCount(2, $listeners);
+		foreach ($listeners as $listener) {
+			$listener($event);
+		}
+		$this->assertEquals(['a' => 1, 'b' => 1], $called);
+	}
+
+	public function testDispatch() {
+		$event = new Event('test.event1', array());
+		$called = ['a' => 0, 'b' => 0];
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['a'] = 1;
+		});
+		$this->registry->register('test.event1', function(Event $event) use (&$called) {
+			$called['b'] = 1;
+		});
+		$this->registry->dispatch($event);
+		$this->assertEquals(['a' => 1, 'b' => 1], $called);
+	}
+
 }

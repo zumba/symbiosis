@@ -13,9 +13,12 @@
 namespace Zumba\Symbiosis\Event;
 
 use \Zumba\Symbiosis\Log,
-	\Zumba\Symbiosis\Exception;
+	\Zumba\Symbiosis\Exception,
+	\Zumba\Symbiosis\Framework\EventInterface,
+	\Psr\EventDispatcher\ListenerProviderInterface,
+	\Psr\EventDispatcher\EventDispatcherInterface;
 
-class EventRegistry {
+class EventRegistry implements ListenerProviderInterface, EventDispatcherInterface {
 
 	// Constant event priorities
 	const PRIORITY_HIGH = 0;
@@ -43,7 +46,7 @@ class EventRegistry {
 	 * @param string|array $events
 	 * @param callable $callback
 	 * @return void
-	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
+	 * @throws \Zumba\Symbiosis\Exception\NotCallableException
 	 */
 	public function register($events, $callback, $priority = 0) {
 		if (!is_callable($callback)) {
@@ -61,11 +64,12 @@ class EventRegistry {
 	 *
 	 * Returns true if a registered event's callback was called.
 	 *
-	 * @param \Zumba\Symbiosis\Event\Event $event Event object
+	 * @param \Zumba\Symbiosis\Framework\EventInterface $event Event object
 	 * @param array $data Data to append/override in the event object
 	 * @return boolean
+	 * @deprecated See dispatch()
 	 */
-	public function trigger(Event $event, $data = array()) {
+	public function trigger(EventInterface $event, $data = array()) {
 		$eventName = $event->name();
 		$event->data(array_merge($event->data(), $data));
 		if (!isset($this->registry[$eventName])) {
@@ -73,18 +77,54 @@ class EventRegistry {
 			return false;
 		}
 		Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
-		foreach ($this->registry[$eventName] as $listeners) {
-			foreach ($listeners as $listener) {
-				if ($listener($event) === false) {
-					$event->stopPropagation();
-				}
-				if (!$event->isPropagating()) {
-					Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
-					break;
-				}
+		foreach ($this->getListenersForEvent($event) as $listener) {
+			if ($listener($event) === false) {
+				$event->stopPropagation();
+			}
+			if ($event->isPropagationStopped()) {
+				Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
+				break;
 			}
 		}
+		$event->stopPropagation();
 		return true;
+	}
+
+	/**
+     * Provide all relevant listeners with an event to process.
+     *
+     * @param object $event
+     *   The object to process.
+     *
+     * @return object
+     *   The Event that was passed, now modified by listeners.
+	 * @throws \Zumba\Symbiosis\Exception\NotRetrievableException
+     */
+    public function dispatch(object $event) {
+		if (!$event instanceof EventInterface) {
+			throw new Exception\NotRetrievableException('Passed object must implement `NamableEventInterface` for registry identification.');
+		}
+		$this->trigger($event);
+		return $event;
+	}
+
+	/**
+     * @param object $event
+     *   An event for which to return the relevant listeners.
+     * @return iterable[callable]
+     *   An iterable (array, iterator, or generator) of callables.  Each
+     *   callable MUST be type-compatible with $event.
+	 * @throws \Zumba\Symbiosis\Exception\NotRetrievableException
+     */
+    public function getListenersForEvent(object $event) : iterable {
+		if (!$event instanceof EventInterface) {
+			throw new Exception\NotRetrievableException('Passed object must implement `NamableEventInterface` for registry identification.');
+		}
+		foreach ($this->registry[$event->name()] as $listeners) {
+			foreach ($listeners as $listener) {
+				yield $listener;
+			}
+		}
 	}
 
 	/**
