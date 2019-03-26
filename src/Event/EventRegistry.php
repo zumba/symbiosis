@@ -91,16 +91,16 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
 	}
 
 	/**
-     * Provide all relevant listeners with an event to process.
-     *
-     * @param object $event
-     *   The object to process.
-     *
-     * @return object
-     *   The Event that was passed, now modified by listeners.
+	 * Provide all relevant listeners with an event to process.
+	 *
+	 * @param object $event
+	 *   The object to process.
+	 *
+	 * @return object
+	 *   The Event that was passed, now modified by listeners.
 	 * @throws \Zumba\Symbiosis\Exception\NotRetrievableException
-     */
-    public function dispatch(object $event) {
+	 */
+	public function dispatch(object $event) {
 		if (!$event instanceof EventInterface) {
 			throw new Exception\NotRetrievableException('Passed object must implement `NamableEventInterface` for registry identification.');
 		}
@@ -109,14 +109,14 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
 	}
 
 	/**
-     * @param object $event
-     *   An event for which to return the relevant listeners.
-     * @return iterable[callable]
-     *   An iterable (array, iterator, or generator) of callables.  Each
-     *   callable MUST be type-compatible with $event.
+	 * @param object $event
+	 *   An event for which to return the relevant listeners.
+	 * @return iterable[callable]
+	 *   An iterable (array, iterator, or generator) of callables.  Each
+	 *   callable MUST be type-compatible with $event.
 	 * @throws \Zumba\Symbiosis\Exception\NotRetrievableException
-     */
-    public function getListenersForEvent(object $event) : iterable {
+	 */
+	public function getListenersForEvent(object $event) : iterable {
 		if (!$event instanceof EventInterface) {
 			throw new Exception\NotRetrievableException('Passed object must implement `NamableEventInterface` for registry identification.');
 		}
