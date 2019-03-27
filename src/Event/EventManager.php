@@ -18,79 +18,84 @@ use \Zumba\Symbiosis\Event\Event;
  * @deprecated Will be removed soon.
  * @see `EventRegistry`
  */
-class EventManager {
+class EventManager
+{
 
-	// Backwards compatibility constants.
-	const PRIORITY_HIGH = EventRegistry::PRIORITY_HIGH;
-	const PRIORITY_MEDIUM = EventRegistry::PRIORITY_MEDIUM;
-	const PRIORITY_LOW = EventRegistry::PRIORITY_LOW;
+    // Backwards compatibility constants.
+    const PRIORITY_HIGH = EventRegistry::PRIORITY_HIGH;
+    const PRIORITY_MEDIUM = EventRegistry::PRIORITY_MEDIUM;
+    const PRIORITY_LOW = EventRegistry::PRIORITY_LOW;
 
-	/**
-	 * Global event registry.
-	 *
-	 * @var Zumba\Symbiosis\Event\EventRegistry
-	 */
-	protected static $registry;
+    /**
+     * Global event registry.
+     *
+     * @var Zumba\Symbiosis\Event\EventRegistry
+     */
+    protected static $registry;
 
-	/**
-	 * Register an event with a callback.
-	 *
-	 * Callback should be in form of function(array)
-	 *
-	 * @param string|array $events
-	 * @param callable $callback
-	 * @return void
-	 * @throws \Zumba\Symbiosis\Exception\NotCollableException
-	 */
-	public static function register($events, $callback, $priority = 0) {
-		static::initialize();
-		static::$registry->register($events, $callback, $priority);
-	}
+    /**
+     * Register an event with a callback.
+     *
+     * Callback should be in form of function(array)
+     *
+     * @param string|array $events
+     * @param callable $callback
+     * @return void
+     * @throws \Zumba\Symbiosis\Exception\NotCollableException
+     */
+    public static function register($events, $callback, $priority = 0)
+    {
+        static::initialize();
+        static::$registry->register($events, $callback, $priority);
+    }
 
-	/**
-	 * Call all listeners registered to provided event with data.
-	 *
-	 * Returns true if a registered event's callback was called.
-	 *
-	 * @param \Zumba\Symbiosis\Event\Event $event Event object
-	 * @param array $data Data to append/override in the event object
-	 * @return boolean
-	 */
-	public static function trigger(Event $event, $data = array()) {
-		static::initialize();
-		return static::$registry->trigger($event, $data);
-	}
+    /**
+     * Call all listeners registered to provided event with data.
+     *
+     * Returns true if a registered event's callback was called.
+     *
+     * @param \Zumba\Symbiosis\Event\Event $event Event object
+     * @param array $data Data to append/override in the event object
+     * @return boolean
+     */
+    public static function trigger(Event $event, $data = array())
+    {
+        static::initialize();
+        return static::$registry->trigger($event, $data);
+    }
 
-	/**
-	 * Clears all listener callbacks for an event.
-	 *
-	 * @param string $event
-	 * @return void
-	 */
-	public static function clear($event) {
-		static::initialize();
-		static::$registry->clear($event);
-	}
+    /**
+     * Clears all listener callbacks for an event.
+     *
+     * @param string $event
+     * @return void
+     */
+    public static function clear($event)
+    {
+        static::initialize();
+        static::$registry->clear($event);
+    }
 
-	/**
-	 * Clears all listener callbacks.
-	 *
-	 * @return void
-	 */
-	public static function clearAll() {
-		static::initialize();
-		static::$registry->clearAll();
-	}
+    /**
+     * Clears all listener callbacks.
+     *
+     * @return void
+     */
+    public static function clearAll()
+    {
+        static::initialize();
+        static::$registry->clearAll();
+    }
 
-	/**
-	 * Properly initialize the global event registry.
-	 *
-	 * @return void
-	 */
-	protected static function initialize() {
-		if (!static::$registry instanceof EventRegistry) {
-			static::$registry = new EventRegistry();
-		}
-	}
-
+    /**
+     * Properly initialize the global event registry.
+     *
+     * @return void
+     */
+    protected static function initialize()
+    {
+        if (!static::$registry instanceof EventRegistry) {
+            static::$registry = new EventRegistry();
+        }
+    }
 }

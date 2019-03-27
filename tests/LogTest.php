@@ -14,71 +14,75 @@ namespace Zumba\Symbiosis\Test;
 
 use \Zumba\Symbiosis\Log;
 
-class LogTest extends TestCase {
+class LogTest extends TestCase
+{
+    public function testReceiver()
+    {
+        $fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
+        $fake->expects($this->once())
+            ->method('log')
+            ->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_DEBUG));
 
-	public function testReceiver() {
-		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
-		$fake->expects($this->once())
-			->method('log')
-			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_DEBUG));
+        Log::receive(array($fake, 'log'));
+        Log::write('Any message', Log::LEVEL_DEBUG);
+    }
 
-		Log::receive(array($fake, 'log'));
-		Log::write('Any message', Log::LEVEL_DEBUG);
-	}
+    public function testWrongReceiver()
+    {
+        $this->expectException('Zumba\Symbiosis\Exception\NotCallableException');
+        Log::receive('something wrong');
+    }
 
-	public function testWrongReceiver() {
-		$this->expectException('Zumba\Symbiosis\Exception\NotCallableException');
-		Log::receive('something wrong');
-	}
+    public function testLevelMinimum()
+    {
+        $fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
+        Log::receive(array($fake, 'log'));
+        Log::minLevel(Log::LEVEL_DEBUG);
 
-	public function testLevelMinimum() {
-		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
-		Log::receive(array($fake, 'log'));
-		Log::minLevel(Log::LEVEL_DEBUG);
+        $fake->expects($this->at(0))
+            ->method('log')
+            ->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_DEBUG));
+        Log::write('Any message', Log::LEVEL_DEBUG);
 
-		$fake->expects($this->at(0))
-			->method('log')
-			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_DEBUG));
-		Log::write('Any message', Log::LEVEL_DEBUG);
+        $fake->expects($this->at(0))
+            ->method('log')
+            ->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_WARNING));
+        Log::write('Any message', Log::LEVEL_WARNING);
+    }
 
-		$fake->expects($this->at(0))
-			->method('log')
-			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_WARNING));
-		Log::write('Any message', Log::LEVEL_WARNING);
-	}
+    public function testLevelSpecific()
+    {
+        $fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
+        Log::receive(array($fake, 'log'));
+        Log::minLevel(Log::LEVEL_WARNING);
 
-	public function testLevelSpecific() {
-		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
-		Log::receive(array($fake, 'log'));
-		Log::minLevel(Log::LEVEL_WARNING);
+        $fake->expects($this->at(0))
+            ->method('log')
+            ->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_WARNING));
+        Log::write('Any message', Log::LEVEL_WARNING);
 
-		$fake->expects($this->at(0))
-			->method('log')
-			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_WARNING));
-		Log::write('Any message', Log::LEVEL_WARNING);
+        $fake->expects($this->at(0))
+            ->method('log')
+            ->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_ERROR));
+        Log::write('Any message', Log::LEVEL_ERROR);
 
-		$fake->expects($this->at(0))
-			->method('log')
-			->with($this->equalTo('Any message'), $this->equalTo(Log::LEVEL_ERROR));
-		Log::write('Any message', Log::LEVEL_ERROR);
+        $fake->expects($this->never())
+            ->method('log');
+        Log::write('Any message', Log::LEVEL_DEBUG);
+    }
 
-		$fake->expects($this->never())
-			->method('log');
-		Log::write('Any message', Log::LEVEL_DEBUG);
-	}
+    public function testLogDetails()
+    {
+        $fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
+        Log::receive(array($fake, 'log'));
+        Log::minLevel(Log::LEVEL_DEBUG);
 
-	public function testLogDetails() {
-		$fake = $this->getMockBuilder('stdClass')->setMethods(['log'])->getMock();
-		Log::receive(array($fake, 'log'));
-		Log::minLevel(Log::LEVEL_DEBUG);
-
-		$expectedDetails = array(
-			'ping' => 'pong'
-		);
-		$fake->expects($this->at(0))
-			->method('log')
-			->with($this->equalTo('Message 1'), $this->equalTo(Log::LEVEL_INFO), $this->equalTo($expectedDetails));
-		Log::write('Message 1', Log::LEVEL_INFO, $expectedDetails);
-	}
-
+        $expectedDetails = array(
+            'ping' => 'pong'
+        );
+        $fake->expects($this->at(0))
+            ->method('log')
+            ->with($this->equalTo('Message 1'), $this->equalTo(Log::LEVEL_INFO), $this->equalTo($expectedDetails));
+        Log::write('Message 1', Log::LEVEL_INFO, $expectedDetails);
+    }
 }

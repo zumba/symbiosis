@@ -12,5 +12,6 @@
  */
 namespace Zumba\Symbiosis\Test;
 
-class TestCase extends \PHPUnit\Framework\TestCase {
+class TestCase extends \PHPUnit\Framework\TestCase
+{
 }
