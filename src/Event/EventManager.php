@@ -13,6 +13,7 @@
 namespace Zumba\Symbiosis\Event;
 
 use \Zumba\Symbiosis\Event\Event;
+use \Psr\Log\LoggerInterface;
 
 /**
  * @deprecated Will be removed soon.
@@ -32,6 +33,24 @@ class EventManager
      * @var Zumba\Symbiosis\Event\EventRegistry
      */
     protected static $registry;
+
+    /**
+     * PSR-3 compliant logger.
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected static $logger;
+
+    /**
+     * Set a static logger that will be used for all event registries from this service.
+     *
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public static function setLogger(LoggerInterface $logger) : void
+    {
+        static::$logger = $logger;
+    }
 
     /**
      * Register an event with a callback.
@@ -95,7 +114,7 @@ class EventManager
     protected static function initialize()
     {
         if (!static::$registry instanceof EventRegistry) {
-            static::$registry = new EventRegistry();
+            static::$registry = new EventRegistry(static::$logger);
         }
     }
 }

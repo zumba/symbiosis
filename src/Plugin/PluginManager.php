@@ -18,8 +18,9 @@ use \Zumba\Symbiosis\Framework\OpenEndable;
 use \Zumba\Symbiosis\Event\EventRegistry;
 use \Zumba\Symbiosis\Event\EventManager;
 use \Zumba\Symbiosis\Event\Event;
-use \Zumba\Symbiosis\Log;
 use \Zumba\Symbiosis\Exception;
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\NullLogger;
 
 class PluginManager
 {
@@ -53,15 +54,23 @@ class PluginManager
     protected $context;
 
     /**
+     * An instance of a PSR-3 compliant logger
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Constructor.
      *
      * @param string $path Plugin file path.
      * @param string $namespace Plugin namespace.
      */
-    public function __construct($path, $namespace)
+    public function __construct($path, $namespace, LoggerInterface $logger = null)
     {
         $this->path = $path;
         $this->namespace = $namespace;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -130,14 +139,14 @@ class PluginManager
      */
     public function initializePlugin(Plugin $plugin)
     {
-        Log::write('Initializing plugin.', Log::LEVEL_DEBUG, array('classname' => (string)$plugin));
+        $this->logger->debug('Initializing plugin.', ['classname' => (string)$plugin]);
         if ($plugin instanceof Registerable) {
             $plugin->eventContext($this->getContext());
             return $plugin->bindPluginEvents();
         } elseif ($plugin instanceof OpenEndable) {
             return $plugin->registerEvents();
         }
-        Log::write('No plugin strategy implemented.', Log::LEVEL_WARNING, array('classname' => (string)$plugin));
+        $this->logger->warning('No plugin strategy implemented.', ['classname' => (string)$plugin]);
         return false;
     }
 
@@ -190,8 +199,8 @@ class PluginManager
     {
         $classObjects = array();
         if (!is_dir($this->path)) {
-            Log::write('Plugin path not a directory.', Log::LEVEL_WARNING, compact('path'));
-            return array();
+            $this->logger->warning('Plugin path not a directory.', compact('path'));
+            return [];
         }
         if ($handle = opendir($this->path)) {
             while (false !== ($entry = readdir($handle))) {

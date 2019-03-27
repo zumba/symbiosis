@@ -12,11 +12,12 @@
  */
 namespace Zumba\Symbiosis\Event;
 
-use \Zumba\Symbiosis\Log;
 use \Zumba\Symbiosis\Exception;
 use \Zumba\Symbiosis\Framework\EventInterface;
 use \Psr\EventDispatcher\ListenerProviderInterface;
 use \Psr\EventDispatcher\EventDispatcherInterface;
+use \Psr\Log\LoggerInterface;
+use \Psr\Log\NullLogger;
 
 class EventRegistry implements ListenerProviderInterface, EventDispatcherInterface
 {
@@ -31,13 +32,21 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
      *
      * @var array
      */
-    protected $registry = array();
+    protected $registry = [];
+
+    /**
+     * An instance of a PSR-3 compliant logger
+     *
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct(LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -77,16 +86,16 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
         $eventName = $event->name();
         $event->data(array_merge($event->data(), $data));
         if (!isset($this->registry[$eventName])) {
-            Log::write('No event registered.', Log::LEVEL_DEBUG, compact('eventName'));
+            $this->logger->debug('No event registered.', compact('eventName'));
             return false;
         }
-        Log::write('Event triggered.', Log::LEVEL_DEBUG, compact('eventName'));
+        $this->logger->debug('Event triggered.', compact('eventName'));
         foreach ($this->getListenersForEvent($event) as $listener) {
             if ($listener($event) === false) {
                 $event->stopPropagation();
             }
             if ($event->isPropagationStopped()) {
-                Log::write('Propagation stopped.', Log::LEVEL_DEBUG, compact('listener', 'eventName'));
+                $this->logger->debug('Propagation stopped.', compact('listener', 'eventName'));
                 break;
             }
         }
@@ -141,7 +150,7 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
      */
     public function clear($event)
     {
-        Log::write('Clearing individual event.', Log::LEVEL_DEBUG, compact('event'));
+        $this->logger->debug('Clearing individual event.', compact('event'));
         if (isset($this->registry[$event])) {
             unset($this->registry[$event]);
         }
@@ -154,7 +163,7 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
      */
     public function clearAll()
     {
-        Log::write('Clearing all events.', Log::LEVEL_DEBUG);
+        $this->logger->debug('Clearing all events.');
         $this->registry = array();
     }
 }
