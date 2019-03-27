@@ -2,5 +2,6 @@
 
 namespace Zumba\Symbiosis\Exception;
 
-class NotRetrievableException extends \Exception {
+class NotRetrievableException extends \Exception
+{
 }
