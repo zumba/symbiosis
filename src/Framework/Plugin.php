@@ -74,7 +74,7 @@ abstract class Plugin
      * Binds events specified in the events property.
      *
      * @return void
-     * @throws \Zumba\Symbiosis\Exception\NotCollableException
+     * @throws \Zumba\Symbiosis\Exception\NotCallableException
      */
     public function bindPluginEvents()
     {

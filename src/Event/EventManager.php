@@ -60,7 +60,7 @@ class EventManager
      * @param string|array $events
      * @param callable $callback
      * @return void
-     * @throws \Zumba\Symbiosis\Exception\NotCollableException
+     * @throws \Zumba\Symbiosis\Exception\NotCallableException
      */
     public static function register($events, $callback, $priority = 0)
     {
