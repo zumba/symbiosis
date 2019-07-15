@@ -59,7 +59,7 @@ class Event implements EventInterface
     /**
      * Holds reference to plugin manager that spawned this event.
      *
-     * @var \Zumba\Symbiosis\Plugin\PluginManager
+     * @var \Zumba\Symbiosis\Plugin\PluginManager|null
      */
     protected $pluginContext;
 
@@ -193,7 +193,7 @@ class Event implements EventInterface
     /**
      * Convenience method for triggering the event from the event object.
      *
-     * @param  Zumba\Symbiosis\EventRegistry $registry Single registry instance if used outside of global context.
+     * @param \Zumba\Symbiosis\Event\EventRegistry $registry Single registry instance if used outside of global context.
      * @return boolean
      */
     public function trigger(EventRegistry $registry = null)
