@@ -199,6 +199,7 @@ class PluginManager
     {
         $classObjects = array();
         if (!is_dir($this->path)) {
+            $path = $this->path;
             $this->logger->warning('Plugin path not a directory.', compact('path'));
             return [];
         }
