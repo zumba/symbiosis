@@ -59,7 +59,7 @@ class Event implements EventInterface
     /**
      * Holds reference to plugin manager that spawned this event.
      *
-     * @var Zumba\Symbiosis\Plugin\PluginManager
+     * @var \Zumba\Symbiosis\Plugin\PluginManager
      */
     protected $pluginContext;
 
@@ -139,7 +139,7 @@ class Event implements EventInterface
      * Set the plugin manager context for this event.
      *
      * @param PluginManager $manager
-     * @return Zumba\Symbiosis\Event\Event
+     * @return \Zumba\Symbiosis\Event\Event
      */
     public function setPluginContext(PluginManager $manager)
     {

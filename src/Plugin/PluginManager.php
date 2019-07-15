@@ -49,7 +49,7 @@ class PluginManager
     /**
      * PluginManager event context.
      *
-     * @var Zumba\Symbiosis\Plugin\EventRegistry
+     * @var \Zumba\Symbiosis\Plugin\EventRegistry
      */
     protected $context;
 
@@ -153,7 +153,7 @@ class PluginManager
     /**
      * Get an instance of the event context for this plugin manager.
      *
-     * @return Zumba\Symbiosis\Plugin\EventRegistry
+     * @return \Zumba\Symbiosis\Plugin\EventRegistry
      */
     public function getContext()
     {
@@ -168,7 +168,7 @@ class PluginManager
      *
      * @param string $name
      * @param array $data
-     * @return Zumba\Symbiosis\Event\Event
+     * @return \Zumba\Symbiosis\Event\Event
      */
     public function spawnEvent($name, $data = array())
     {
@@ -178,7 +178,7 @@ class PluginManager
     /**
      * Trigger an event to the bound context of this plugin manager.
      *
-     * @param Zumba\Symbiosis\Event\Event $event
+     * @param \Zumba\Symbiosis\Event\Event $event
      * @param array $data
      * @return boolean
      */

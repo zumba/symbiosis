@@ -30,7 +30,7 @@ class EventManager
     /**
      * Global event registry.
      *
-     * @var Zumba\Symbiosis\Event\EventRegistry
+     * @var \Zumba\Symbiosis\Event\EventRegistry
      */
     protected static $registry;
 
