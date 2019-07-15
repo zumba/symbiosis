@@ -71,6 +71,13 @@ abstract class Plugin
     }
 
     /**
+     * Return a hash array containing the event name as the key and a callback or array of callbacks as the value.
+     *
+     * @return array
+     */
+    abstract public function getEvents();
+
+    /**
      * Binds events specified in the events property.
      *
      * @return void

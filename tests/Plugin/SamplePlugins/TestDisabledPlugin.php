@@ -22,4 +22,9 @@ class TestDisabledPlugin extends Plugin
     {
         // Do nothing
     }
+
+    public function getEvents()
+    {
+        return [];
+    }
 }

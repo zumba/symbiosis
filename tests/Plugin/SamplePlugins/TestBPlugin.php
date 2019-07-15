@@ -22,4 +22,9 @@ class TestBPlugin extends Plugin
     {
         // Do nothing
     }
+
+    public function getEvents()
+    {
+        return [];
+    }
 }
