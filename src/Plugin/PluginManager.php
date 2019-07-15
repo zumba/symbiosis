@@ -49,7 +49,7 @@ class PluginManager
     /**
      * PluginManager event context.
      *
-     * @var Zumba\Symbiosis\Plugin\EventRegistry
+     * @var \Zumba\Symbiosis\Event\EventRegistry
      */
     protected $context;
 
@@ -134,26 +134,24 @@ class PluginManager
      * Initialize a specific plugin and binds its events.
      *
      * @param \Zumba\Symbiosis\Framework\Plugin $plugin Plugin instance.
-     * @return mixed
-     * @throws \Zumba\Symbiosis\Exception\NoRegisterEventsMethodException
+     * @return void
      */
     public function initializePlugin(Plugin $plugin)
     {
         $this->logger->debug('Initializing plugin.', ['classname' => (string)$plugin]);
         if ($plugin instanceof Registerable) {
             $plugin->eventContext($this->getContext());
-            return $plugin->bindPluginEvents();
+            $plugin->bindPluginEvents();
         } elseif ($plugin instanceof OpenEndable) {
-            return $plugin->registerEvents();
+            $plugin->registerEvents();
         }
         $this->logger->warning('No plugin strategy implemented.', ['classname' => (string)$plugin]);
-        return false;
     }
 
     /**
      * Get an instance of the event context for this plugin manager.
      *
-     * @return Zumba\Symbiosis\Plugin\EventRegistry
+     * @return \Zumba\Symbiosis\Event\EventRegistry
      */
     public function getContext()
     {
@@ -168,7 +166,7 @@ class PluginManager
      *
      * @param string $name
      * @param array $data
-     * @return Zumba\Symbiosis\Event\Event
+     * @return \Zumba\Symbiosis\Event\Event
      */
     public function spawnEvent($name, $data = array())
     {
@@ -178,7 +176,7 @@ class PluginManager
     /**
      * Trigger an event to the bound context of this plugin manager.
      *
-     * @param Zumba\Symbiosis\Event\Event $event
+     * @param \Zumba\Symbiosis\Event\Event $event
      * @param array $data
      * @return boolean
      */

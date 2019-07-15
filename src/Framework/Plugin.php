@@ -35,7 +35,7 @@ abstract class Plugin
     /**
      * Plugin context for this plugin's instance.
      *
-     * @var Zumba\Symbiosis\Plugin\EventRegistry
+     * @var \Zumba\Symbiosis\Event\EventRegistry
      */
     protected $context;
 
@@ -49,8 +49,8 @@ abstract class Plugin
     /**
      * Get/set the event context for this plugin.
      *
-     * @param Zumba\Symbiosis\Plugin\EventRegistry $context
-     * @return Zumba\Symbiosis\Plugin\EventRegistry
+     * @param \Zumba\Symbiosis\Event\EventRegistry $context
+     * @return \Zumba\Symbiosis\Event\EventRegistry
      */
     public function eventContext(EventRegistry $context = null)
     {
@@ -71,10 +71,17 @@ abstract class Plugin
     }
 
     /**
+     * Return a hash array containing the event name as the key and a callback or array of callbacks as the value.
+     *
+     * @return array
+     */
+    abstract public function getEvents();
+
+    /**
      * Binds events specified in the events property.
      *
      * @return void
-     * @throws \Zumba\Symbiosis\Exception\NotCollableException
+     * @throws \Zumba\Symbiosis\Exception\NotCallableException
      */
     public function bindPluginEvents()
     {
