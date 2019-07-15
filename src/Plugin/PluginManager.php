@@ -134,19 +134,18 @@ class PluginManager
      * Initialize a specific plugin and binds its events.
      *
      * @param \Zumba\Symbiosis\Framework\Plugin $plugin Plugin instance.
-     * @return mixed
+     * @return void
      */
     public function initializePlugin(Plugin $plugin)
     {
         $this->logger->debug('Initializing plugin.', ['classname' => (string)$plugin]);
         if ($plugin instanceof Registerable) {
             $plugin->eventContext($this->getContext());
-            return $plugin->bindPluginEvents();
+            $plugin->bindPluginEvents();
         } elseif ($plugin instanceof OpenEndable) {
-            return $plugin->registerEvents();
+            $plugin->registerEvents();
         }
         $this->logger->warning('No plugin strategy implemented.', ['classname' => (string)$plugin]);
-        return false;
     }
 
     /**
