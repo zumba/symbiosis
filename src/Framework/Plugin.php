@@ -35,7 +35,7 @@ abstract class Plugin
     /**
      * Plugin context for this plugin's instance.
      *
-     * @var \Zumba\Symbiosis\Plugin\EventRegistry
+     * @var \Zumba\Symbiosis\Event\EventRegistry
      */
     protected $context;
 
@@ -49,8 +49,8 @@ abstract class Plugin
     /**
      * Get/set the event context for this plugin.
      *
-     * @param \Zumba\Symbiosis\Plugin\EventRegistry $context
-     * @return \Zumba\Symbiosis\Plugin\EventRegistry
+     * @param \Zumba\Symbiosis\Event\EventRegistry $context
+     * @return \Zumba\Symbiosis\Event\EventRegistry
      */
     public function eventContext(EventRegistry $context = null)
     {

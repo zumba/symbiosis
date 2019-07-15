@@ -49,7 +49,7 @@ class PluginManager
     /**
      * PluginManager event context.
      *
-     * @var \Zumba\Symbiosis\Plugin\EventRegistry
+     * @var \Zumba\Symbiosis\Event\EventRegistry
      */
     protected $context;
 
@@ -153,7 +153,7 @@ class PluginManager
     /**
      * Get an instance of the event context for this plugin manager.
      *
-     * @return \Zumba\Symbiosis\Plugin\EventRegistry
+     * @return \Zumba\Symbiosis\Event\EventRegistry
      */
     public function getContext()
     {
