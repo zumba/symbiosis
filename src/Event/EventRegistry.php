@@ -99,7 +99,6 @@ class EventRegistry implements ListenerProviderInterface, EventDispatcherInterfa
                 break;
             }
         }
-        $event->stopPropagation();
         return true;
     }
 
