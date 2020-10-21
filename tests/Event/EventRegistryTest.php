@@ -19,7 +19,7 @@ use \Zumba\Symbiosis\Event\Event;
 /**
  * @group event
  */
-class EventRegisryTest extends TestCase
+class EventRegistryTest extends TestCase
 {
     protected $registry;
 
