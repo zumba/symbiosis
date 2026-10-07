@@ -196,7 +196,7 @@ class Event implements EventInterface
      * @param \Zumba\Symbiosis\Event\EventRegistry $registry Single registry instance if used outside of global context.
      * @return boolean
      */
-    public function trigger(EventRegistry $registry = null)
+    public function trigger(?EventRegistry $registry = null)
     {
         if ($this->pluginContext) {
             return $this->pluginContext->trigger($this);
