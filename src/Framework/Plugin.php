@@ -52,7 +52,7 @@ abstract class Plugin
      * @param \Zumba\Symbiosis\Event\EventRegistry $context
      * @return \Zumba\Symbiosis\Event\EventRegistry
      */
-    public function eventContext(EventRegistry $context = null)
+    public function eventContext(?EventRegistry $context = null)
     {
         if ($context !== null) {
             $this->context = $context;

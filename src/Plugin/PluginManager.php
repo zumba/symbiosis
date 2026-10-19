@@ -66,7 +66,7 @@ class PluginManager
      * @param string $path Plugin file path.
      * @param string $namespace Plugin namespace.
      */
-    public function __construct($path, $namespace, LoggerInterface $logger = null)
+    public function __construct($path, $namespace, ?LoggerInterface $logger = null)
     {
         $this->path = $path;
         $this->namespace = $namespace;
