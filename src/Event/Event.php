@@ -186,7 +186,7 @@ class Event implements EventInterface
      */
     public function preventAction($prevent = true, $message = '')
     {
-        $this->shouldPreventAction = (boolean)$prevent;
+        $this->shouldPreventAction = (bool)$prevent;
         $this->preventActionMessage = (string)$message;
     }
 
